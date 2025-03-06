@@ -12,6 +12,19 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
+find_package(nlohmann_json 3.11.3 REQUIRED)
+
+add_executable(main
+                src/main.cpp
+                src/game.cpp
+                src/mainMenu.cpp
+                src/resource/resourceMgr.cpp
+                src/component/component.cpp
+                src/component/text.cpp
+                src/component/boundingBox.cpp
+                src/component/mouseOver.cpp
+                src/component/leftClick.cpp
+                src/system/input.cpp
+                src/system/render.cpp)
 target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+target_link_libraries(main PRIVATE SFML::Graphics SFML::Audio nlohmann_json::nlohmann_json)
