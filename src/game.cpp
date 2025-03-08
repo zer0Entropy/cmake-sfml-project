@@ -189,11 +189,21 @@ void Game::CreateGameplayState() {
     };
 
     EntityID playerCharacterID{gameState.numEntities++};
-    /* CREATURECOMPONENT */
+    /* SPRITE COMPONENT */
+    InitComponent(gameState.spriteCmps[playerCharacterID], playerCharacterID, Component::Type::Sprite);
+    gameState.spriteCmps[playerCharacterID].texture = resourceMgr.AcquireTexturePtr((ResourceID)gameState.playerTextureID);
+    /* TRANSFORM COMPONENT */
+    InitComponent(gameState.transformCmps[playerCharacterID], playerCharacterID, Component::Type::Transform);
+    gameState.transformCmps[playerCharacterID].sfmlTransformable.setScale(sf::Vector2f{3.f, 3.f});
+    gameState.transformCmps[playerCharacterID].sfmlTransformable.setPosition(sf::Vector2f{0.f, 0.f});
+    /* BOUNDINGBOX COMPONENT */
+    InitComponent(gameState.boundingBoxCmps[playerCharacterID], playerCharacterID, Component::Type::BoundingBox);
+    UpdateBoundingBox(gameState.boundingBoxCmps[playerCharacterID], gameState.transformCmps[playerCharacterID], gameState.spriteCmps[playerCharacterID]);
+    /* CREATURE COMPONENT */
     InitComponent(gameState.creatureCmps[playerCharacterID], playerCharacterID, Component::Type::Creature);
 
     CreatureComponent& playerCharacter{gameState.creatureCmps[playerCharacterID]};
-    InitCreature(playerCharacter, "PLAYER", playerLocation, resourceMgr.AcquireTexturePtr((ResourceID)gameState.playerTextureID));
+    InitCreature(playerCharacter, "PLAYER", playerLocation);
     PlaceCreature(gameState.currentLevel, playerCharacter);
 
     InitView(gameState.currentLevel.mapView, sf::Vector2f{0.f, 0.f}, windowSize);
