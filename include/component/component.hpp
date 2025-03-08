@@ -14,6 +14,7 @@ struct Component {
         LeftClick,
         RightClick,
         Widget,
+        Creature,
         NumTypes
     };
 

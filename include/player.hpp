@@ -1,9 +1,9 @@
 #pragma once
 
-#include "creature.hpp"
+#include "component/component.hpp"
 
 struct Player {
 
-    Creature        character;
+    Entity          character;
     
 };

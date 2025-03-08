@@ -164,10 +164,17 @@ void Game::CreateGameplayState() {
         resourceMgr.LoadResource((ResourceID)gameState.floorTextureID, Resource::Type::Texture, (std::string)gameState.floorTexturePath)
     };
 
+    ResourceMgr::ErrorCode loadPlayerOutcome{
+        resourceMgr.LoadResource((ResourceID)gameState.playerTextureID, Resource::Type::Texture, (std::string)gameState.playerTexturePath)
+    };
+
     if(loadWallOutcome != ResourceMgr::ErrorCode::Success) {
          // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
     }
     if(loadFloorOutcome != ResourceMgr::ErrorCode::Success) {
+        // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
+    }
+    if(loadPlayerOutcome != ResourceMgr::ErrorCode::Success) {
         // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
     }
 
@@ -176,11 +183,18 @@ void Game::CreateGameplayState() {
     gameState.currentLevel.terrainTextures[(int)Terrain::Type::Ground] = resourceMgr.AcquireTexturePtr((ResourceID)gameState.floorTextureID);
     gameState.currentLevel.terrainTextures[(int)Terrain::Type::Wall] = resourceMgr.AcquireTexturePtr((ResourceID)gameState.wallTextureID);
 
-    gameState.player.character.name = "PLAYER";
-    gameState.player.character.location = {
+    sf::Vector2u playerLocation{
         gameState.currentLevel.map.width / 2,
         gameState.currentLevel.map.height / 2
     };
+
+    EntityID playerCharacterID{gameState.numEntities++};
+    /* CREATURECOMPONENT */
+    InitComponent(gameState.creatureCmps[playerCharacterID], playerCharacterID, Component::Type::Creature);
+
+    CreatureComponent& playerCharacter{gameState.creatureCmps[playerCharacterID]};
+    InitCreature(playerCharacter, "PLAYER", playerLocation, resourceMgr.AcquireTexturePtr((ResourceID)gameState.playerTextureID));
+    PlaceCreature(gameState.currentLevel, playerCharacter);
 
     InitView(gameState.currentLevel.mapView, sf::Vector2f{0.f, 0.f}, windowSize);
     
@@ -219,18 +233,16 @@ std::pair<EntityID, ComponentList> Game::CreateMainMenu(MainMenuState& gameState
         /* SPRITE COMPONENT */
         InitComponent(gameState.spriteCmps[menuID], menuID, Component::Type::Sprite);
         gameState.spriteCmps[menuID].texture = resourceMgr.AcquireTexturePtr((ResourceID)gameState.backgroundID);
-        gameState.spriteCmps[menuID].sfmlSprite = std::make_unique<sf::Sprite>(gameState.spriteCmps[menuID].texture->sfmlTexture);
         /* TRANSFORM COMPONENT */
         InitComponent(gameState.transformCmps[menuID], menuID, Component::Type::Transform);
-        gameState.transformCmps[menuID].sfmlTransformable = gameState.spriteCmps[menuID].sfmlSprite.get();
-        sf::Vector2f size{gameState.spriteCmps[menuID].sfmlSprite->getGlobalBounds().size};
+        sf::Vector2f size{gameState.spriteCmps[menuID].texture->sfmlTexture.getSize()};
         sf::Vector2f scale{
             windowSize.x / size.x,
             windowSize.y / size.y
         };
-        gameState.transformCmps[menuID].sfmlTransformable->setScale(scale);
+        gameState.transformCmps[menuID].sfmlTransformable.setScale(scale);
         sf::Vector2f position{0.f, 0.f};
-        gameState.transformCmps[menuID].sfmlTransformable->setPosition(position);
+        gameState.transformCmps[menuID].sfmlTransformable.setPosition(position);
     }
     return std::pair<EntityID, ComponentList>{
         menuID,
@@ -255,21 +267,20 @@ std::pair<EntityID, ComponentList> Game::CreateNewGameOption(MainMenuState& game
     InitText(   gameState.textCmps[newGameID],
                 *resourceMgr.AcquireFontPtr((ResourceID)gameState.fontID),
                 gameState.fontSize,
-                gameState.fontOutlineThickness,
-                gameState.fontOutlineColor,
+                gameState.fontOutlineThicknessNormal,
+                gameState.fontOutlineColorNormal,
                 gameState.fontFillColor,
                 gameState.newGameContents);
     /* TRANSFORM COMPONENT */
     InitComponent(gameState.transformCmps[newGameID], newGameID, Component::Type::Transform);
-    gameState.transformCmps[newGameID].sfmlTransformable = gameState.textCmps[newGameID].sfmlText.get();
     sf::Vector2f position{
         windowSize.x * (gameState.newGameRelPosition.x / 100.f),
         windowSize.y * (gameState.newGameRelPosition.y / 100.f)
     };
-    gameState.transformCmps[newGameID].sfmlTransformable->setPosition(position);
+    gameState.transformCmps[newGameID].sfmlTransformable.setPosition(position);
     /* BOUNDING BOX COMPONENT */
     InitComponent(gameState.boundingBoxCmps[newGameID], newGameID, Component::Type::BoundingBox);
-    UpdateBoundingBox(gameState.boundingBoxCmps[newGameID], gameState.textCmps[newGameID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[newGameID], gameState.transformCmps[newGameID], gameState.textCmps[newGameID]);
     /* MOUSEOVER COMPONENT */
     InitComponent(gameState.mouseOverCmps[newGameID], newGameID, Component::Type::MouseOver);
     gameState.mouseOverCmps[newGameID].triggeredAction = ActionID::SetMenuSelection;
@@ -279,7 +290,7 @@ std::pair<EntityID, ComponentList> Game::CreateNewGameOption(MainMenuState& game
 
     // Center text, then update BoundingBox
     Center(gameState.boundingBoxCmps[newGameID], gameState.transformCmps[newGameID]);
-    UpdateBoundingBox(gameState.boundingBoxCmps[newGameID], gameState.textCmps[newGameID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[newGameID], gameState.transformCmps[newGameID], gameState.textCmps[newGameID]);
 
     return std::pair<EntityID, ComponentList>{
         newGameID,
@@ -307,21 +318,20 @@ std::pair<EntityID, ComponentList> Game::CreateLoadGameOption(MainMenuState& gam
     InitText(   gameState.textCmps[loadGameID],
                 *resourceMgr.AcquireFontPtr((ResourceID)gameState.fontID),
                 gameState.fontSize,
-                gameState.fontOutlineThickness,
-                gameState.fontOutlineColor,
+                gameState.fontOutlineThicknessNormal,
+                gameState.fontOutlineColorNormal,
                 gameState.fontFillColor,
                 gameState.loadGameContents);
     /* TRANSFORM COMPONENT */
     InitComponent(gameState.transformCmps[loadGameID], loadGameID, Component::Type::Transform);
-    gameState.transformCmps[loadGameID].sfmlTransformable = gameState.textCmps[loadGameID].sfmlText.get();
     sf::Vector2f position{
         windowSize.x * (gameState.loadGameRelPosition.x / 100.f),
         windowSize.y * (gameState.loadGameRelPosition.y / 100.f)
     };
-    gameState.transformCmps[loadGameID].sfmlTransformable->setPosition(position);
+    gameState.transformCmps[loadGameID].sfmlTransformable.setPosition(position);
     /* BOUNDING BOX COMPONENT */
     InitComponent(gameState.boundingBoxCmps[loadGameID], loadGameID, Component::Type::BoundingBox);
-    UpdateBoundingBox(gameState.boundingBoxCmps[loadGameID], gameState.textCmps[loadGameID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[loadGameID], gameState.transformCmps[loadGameID], gameState.textCmps[loadGameID]);
     /* MOUSEOVER COMPONENT */
     InitComponent(gameState.mouseOverCmps[loadGameID], loadGameID, Component::Type::MouseOver);
     gameState.mouseOverCmps[loadGameID].triggeredAction = ActionID::SetMenuSelection;
@@ -331,7 +341,7 @@ std::pair<EntityID, ComponentList> Game::CreateLoadGameOption(MainMenuState& gam
 
     // Center text, then update BoundingBox
     Center(gameState.boundingBoxCmps[loadGameID], gameState.transformCmps[loadGameID]);
-    UpdateBoundingBox(gameState.boundingBoxCmps[loadGameID], gameState.textCmps[loadGameID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[loadGameID], gameState.transformCmps[loadGameID], gameState.textCmps[loadGameID]);
 
     return std::pair<EntityID, ComponentList>{
         loadGameID,
@@ -359,21 +369,20 @@ std::pair<EntityID, ComponentList> Game::CreateSettingsOption(MainMenuState& gam
     InitText(   gameState.textCmps[settingsID],
                 *resourceMgr.AcquireFontPtr((ResourceID)gameState.fontID),
                 gameState.fontSize,
-                gameState.fontOutlineThickness,
-                gameState.fontOutlineColor,
+                gameState.fontOutlineThicknessNormal,
+                gameState.fontOutlineColorNormal,
                 gameState.fontFillColor,
                 gameState.settingsContents);
     /* TRANSFORM COMPONENT */
     InitComponent(gameState.transformCmps[settingsID], settingsID, Component::Type::Transform);
-    gameState.transformCmps[settingsID].sfmlTransformable = gameState.textCmps[settingsID].sfmlText.get();
     sf::Vector2f position{
         windowSize.x * (gameState.settingsRelPosition.x / 100.f),
         windowSize.y * (gameState.settingsRelPosition.y / 100.f)
     };
-    gameState.transformCmps[settingsID].sfmlTransformable->setPosition(position);
+    gameState.transformCmps[settingsID].sfmlTransformable.setPosition(position);
     /* BOUNDING BOX COMPONENT */
     InitComponent(gameState.boundingBoxCmps[settingsID], settingsID, Component::Type::BoundingBox);
-    UpdateBoundingBox(gameState.boundingBoxCmps[settingsID], gameState.textCmps[settingsID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[settingsID], gameState.transformCmps[settingsID], gameState.textCmps[settingsID]);
     /* MOUSEOVER COMPONENT */
     InitComponent(gameState.mouseOverCmps[settingsID], settingsID, Component::Type::MouseOver);
     gameState.mouseOverCmps[settingsID].triggeredAction = ActionID::SetMenuSelection;
@@ -383,7 +392,7 @@ std::pair<EntityID, ComponentList> Game::CreateSettingsOption(MainMenuState& gam
 
     // Center text, then update BoundingBox
     Center(gameState.boundingBoxCmps[settingsID], gameState.transformCmps[settingsID]);
-    UpdateBoundingBox(gameState.boundingBoxCmps[settingsID], gameState.textCmps[settingsID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[settingsID], gameState.transformCmps[settingsID], gameState.textCmps[settingsID]);
 
     return std::pair<EntityID, ComponentList>{
         settingsID,
@@ -411,21 +420,20 @@ std::pair<EntityID, ComponentList> Game::CreateQuitGameOption(MainMenuState& gam
     InitText(   gameState.textCmps[quitGameID],
                 *resourceMgr.AcquireFontPtr((ResourceID)gameState.fontID),
                 gameState.fontSize,
-                gameState.fontOutlineThickness,
-                gameState.fontOutlineColor,
+                gameState.fontOutlineThicknessNormal,
+                gameState.fontOutlineColorNormal,
                 gameState.fontFillColor,
                 gameState.quitGameContents);
     /* TRANSFORM COMPONENT */
     InitComponent(gameState.transformCmps[quitGameID], quitGameID, Component::Type::Transform);
-    gameState.transformCmps[quitGameID].sfmlTransformable = gameState.textCmps[quitGameID].sfmlText.get();
     sf::Vector2f position{
         windowSize.x * (gameState.quitGameRelPosition.x / 100.f),
         windowSize.y * (gameState.quitGameRelPosition.y / 100.f)
     };
-    gameState.transformCmps[quitGameID].sfmlTransformable->setPosition(position);
+    gameState.transformCmps[quitGameID].sfmlTransformable.setPosition(position);
     /* BOUNDING BOX COMPONENT */
     InitComponent(gameState.boundingBoxCmps[quitGameID], quitGameID, Component::Type::BoundingBox);
-    UpdateBoundingBox(gameState.boundingBoxCmps[quitGameID], gameState.textCmps[quitGameID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[quitGameID], gameState.transformCmps[quitGameID], gameState.textCmps[quitGameID]);
     /* MOUSEOVER COMPONENT */
     InitComponent(gameState.mouseOverCmps[quitGameID], quitGameID, Component::Type::MouseOver);
     gameState.mouseOverCmps[quitGameID].triggeredAction = ActionID::SetMenuSelection;
@@ -435,7 +443,7 @@ std::pair<EntityID, ComponentList> Game::CreateQuitGameOption(MainMenuState& gam
 
     // Center text, then update BoundingBox
     Center(gameState.boundingBoxCmps[quitGameID], gameState.transformCmps[quitGameID]);
-    UpdateBoundingBox(gameState.boundingBoxCmps[quitGameID], gameState.textCmps[quitGameID]);
+    UpdateBoundingBox(gameState.boundingBoxCmps[quitGameID], gameState.transformCmps[quitGameID], gameState.textCmps[quitGameID]);
 
     return std::pair<EntityID, ComponentList>{
         quitGameID,
@@ -451,10 +459,8 @@ std::pair<EntityID, ComponentList> Game::CreateQuitGameOption(MainMenuState& gam
 }
 
 void Center(BoundingBoxComponent& boundingBox, TransformComponent& transform) {
-    if(transform.sfmlTransformable) {
-        transform.sfmlTransformable->setOrigin({
-            boundingBox.sfmlBoundingBox.size.x / 2.f,
-            boundingBox.sfmlBoundingBox.size.y / 2.f
-        });
-    }
+    transform.sfmlTransformable.setOrigin({
+        boundingBox.sfmlBoundingBox.size.x / 2.f,
+        boundingBox.sfmlBoundingBox.size.y / 2.f
+    });
 }

@@ -29,6 +29,7 @@ add_executable(main
                 src/component/boundingBox.cpp
                 src/component/mouseOver.cpp
                 src/component/leftClick.cpp
+                src/component/creature.cpp
                 src/system/input.cpp
                 src/system/render.cpp)
 target_compile_features(main PRIVATE cxx_std_17)

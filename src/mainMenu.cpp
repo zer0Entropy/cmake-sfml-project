@@ -1,9 +1,8 @@
 #include "../include/mainMenu.hpp"
 
-const sf::Color MainMenuState::fontOutlineColor{sf::Color::White};
+const sf::Color MainMenuState::fontOutlineColorNormal{sf::Color::White};
+const sf::Color MainMenuState::fontOutlineColorHightlight{sf::Color::Red};
 const sf::Color MainMenuState::fontFillColor{sf::Color::Black};
-
-const sf::Color MainMenuState::fontHighlightColor{sf::Color::Red};
 
 const sf::Vector2u MainMenuState::newGameRelPosition{50, 40};
 const sf::Vector2u MainMenuState::loadGameRelPosition{50, 50};
@@ -53,8 +52,8 @@ void MainMenuState::DoAction(ActionID action, std::optional<EntityID> ownerID) {
 void MainMenuState::HighlightSelectedOption(EntityID menuOptionID) {
     auto& textCmp{textCmps[menuOptionID]};
     if(textCmp.enabled) {
-        textCmp.sfmlText->setOutlineThickness(fontHighlightThickness);
-        textCmp.sfmlText->setOutlineColor(fontHighlightColor);
+        textCmp.outlineThickness = fontOutlineThicknessHighlight;
+        textCmp.outlineColor = fontOutlineColorHightlight;
     }
 }
 
@@ -62,8 +61,8 @@ void MainMenuState::ResetHighlight() {
     for(int n = 0; n < numEntities; ++n) {
         auto& textCmp{textCmps[n]};
         if(textCmp.enabled) {
-            textCmp.sfmlText->setOutlineThickness(fontOutlineThickness);
-            textCmp.sfmlText->setOutlineColor(fontOutlineColor);
+            textCmp.outlineThickness = fontOutlineThicknessNormal;
+            textCmp.outlineColor = fontOutlineColorNormal;
         }
     }
 }

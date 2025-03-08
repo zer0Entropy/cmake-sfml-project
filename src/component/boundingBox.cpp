@@ -1,19 +1,29 @@
 #include "../../include/component/boundingBox.hpp"
 
-void UpdateBoundingBox(BoundingBoxComponent& boundingBox, SpriteComponent& sprite) {
-    if(!sprite.sfmlSprite) {
-        boundingBox.sfmlBoundingBox = sf::FloatRect{{0.f, 0.f}, {0.f, 0.f}};
-    } else {
-        boundingBox.sfmlBoundingBox = sprite.sfmlSprite->getGlobalBounds();
-    }
+void UpdateBoundingBox(BoundingBoxComponent& boundingBox, TransformComponent& transform, SpriteComponent& sprite) {
+    sf::Sprite sfmlSprite{sprite.texture->sfmlTexture};
+    sfmlSprite.setOrigin(transform.sfmlTransformable.getOrigin());
+    sfmlSprite.setScale(transform.sfmlTransformable.getScale());
+    sfmlSprite.setPosition(transform.sfmlTransformable.getPosition());
+
+    boundingBox.sfmlBoundingBox = {
+        sfmlSprite.getGlobalBounds().position,
+        sfmlSprite.getGlobalBounds().size
+    };
 }
 
-void UpdateBoundingBox(BoundingBoxComponent& boundingBox, TextComponent& text) {
-    if(!text.sfmlText) {
-        boundingBox.sfmlBoundingBox = sf::FloatRect{{0.f, 0.f}, {0.f, 0.f}};
-    } else {
-        boundingBox.sfmlBoundingBox = text.sfmlText->getGlobalBounds();
-    }
+void UpdateBoundingBox(BoundingBoxComponent& boundingBox, TransformComponent& transform, TextComponent& text) {
+    sf::Text sfmlText{text.font->sfmlFont};
+    sfmlText.setCharacterSize(text.characterSize);
+    sfmlText.setOutlineThickness(text.outlineThickness);
+    sfmlText.setString(text.contents);
+    sfmlText.setOrigin(transform.sfmlTransformable.getOrigin());
+    sfmlText.setPosition(transform.sfmlTransformable.getPosition());
+
+    boundingBox.sfmlBoundingBox = {
+        sfmlText.getGlobalBounds().position,
+        sfmlText.getGlobalBounds().size
+    };
 }
 
 bool IsInBounds(const sf::FloatRect& bounds, const sf::Vector2i& point) {

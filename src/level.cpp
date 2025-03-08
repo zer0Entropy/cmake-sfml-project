@@ -1,4 +1,5 @@
 #include "../include/level.hpp"
+#include "../include/component/creature.hpp"
 
 void InitLevel(Level& level, unsigned int index) {
     level.index = index;
@@ -46,4 +47,9 @@ void UpdateView(Level& level, sf::Vector2u center) {
             level.mapView.visibleTiles.push_back(&level.map.tiles[y * Map::width + x]);
         }
     }
+}
+
+void PlaceCreature(Level& level, CreatureComponent& creature) {
+    level.map.tiles[creature.location.y * Map::width + creature.location.x].occupant = &creature;
+    level.creatureList.push_back(creature.ownerID);
 }

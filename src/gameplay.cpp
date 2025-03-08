@@ -5,7 +5,8 @@ void GameplayState::DoAction(ActionID action, std::optional<EntityID> ownerID) {
 }
 
 void GameplayState::RenderLevel(Level& level, const Player& player, sf::RenderWindow& window) {
-    UpdateView(level, player.character.location);
+    CreatureComponent& playerCharacter{creatureCmps[player.character.first]};
+    UpdateView(level, playerCharacter.location);
     for(unsigned int y = level.mapView.topLeft.y; y < level.mapView.topLeft.y + level.mapView.sizeInTiles.y; ++y) {
         if(y > Map::height) {
             break;

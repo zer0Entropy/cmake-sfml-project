@@ -6,8 +6,12 @@
 #include "../resource/font.hpp"
 
 struct TextComponent: public Component {
-    std::unique_ptr<sf::Text>       sfmlText;
-    Font*                           font;
+    Font*           font;
+    unsigned int    characterSize;
+    float           outlineThickness;
+    sf::Color       outlineColor;
+    sf::Color       fillColor;
+    std::string     contents;
 };
 
 void InitText(  TextComponent& text,

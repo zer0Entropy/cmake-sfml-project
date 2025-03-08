@@ -6,6 +6,5 @@
 #include "../resource/texture.hpp"
 
 struct SpriteComponent: public Component {
-    std::unique_ptr<sf::Sprite>     sfmlSprite;
-    Texture*                        texture;
+    Texture*        texture;
 };

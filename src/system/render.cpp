@@ -17,10 +17,22 @@ void RenderSystem::Update(GameState& gameState) {
         const auto& textCmp{gameState.textCmps[n]};
         const auto& transformCmp{gameState.transformCmps[n]};
         if(spriteCmp.enabled && transformCmp.enabled) {
-            mainWindow.draw(*spriteCmp.sfmlSprite);
+            sf::Sprite sprite{spriteCmp.texture->sfmlTexture};
+            sprite.setOrigin(transformCmp.sfmlTransformable.getOrigin());
+            sprite.setScale(transformCmp.sfmlTransformable.getScale());
+            sprite.setPosition(transformCmp.sfmlTransformable.getPosition());
+            mainWindow.draw(sprite);
         }
         else if(textCmp.enabled && transformCmp.enabled) {
-            mainWindow.draw(*textCmp.sfmlText);
+            sf::Text text{textCmp.font->sfmlFont};
+            text.setCharacterSize(textCmp.characterSize);
+            text.setOutlineThickness(textCmp.outlineThickness);
+            text.setOutlineColor(textCmp.outlineColor);
+            text.setFillColor(textCmp.fillColor);
+            text.setString(textCmp.contents);
+            text.setOrigin(transformCmp.sfmlTransformable.getOrigin());
+            text.setPosition(transformCmp.sfmlTransformable.getPosition());
+            mainWindow.draw(text);
         }
     }
 

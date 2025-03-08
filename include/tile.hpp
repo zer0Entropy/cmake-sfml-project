@@ -4,7 +4,7 @@
 
 #include "terrain.hpp"
 
-struct Creature;
+struct CreatureComponent;
 
 struct Tile {
 
@@ -13,7 +13,7 @@ struct Tile {
 
     sf::Vector2u        location;
     Terrain             terrain;
-    Creature*           occupant;
+    CreatureComponent*  occupant;
 
 };
 

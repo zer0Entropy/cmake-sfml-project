@@ -4,11 +4,14 @@
 
 #include "map.hpp"
 #include "resource/texture.hpp"
+#include "component/component.hpp"
 
 struct Level {
 
     unsigned int                index;
     Map                         map;
+
+    std::vector<EntityID>       creatureList;
 
     std::array<Terrain, (unsigned int)Terrain::Type::NumTerrainTypes>       terrains;
     std::array<Texture*, (unsigned int)Terrain::Type::NumTerrainTypes>      terrainTextures;
@@ -34,3 +37,5 @@ void InitLevel(Level& level, unsigned int index);
 
 void InitView(Level::View& view, sf::Vector2f position, sf::Vector2u windowSize);
 void UpdateView(Level& level, sf::Vector2u center);
+
+void PlaceCreature(Level& level, CreatureComponent& creature);
