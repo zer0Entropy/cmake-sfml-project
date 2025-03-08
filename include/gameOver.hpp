@@ -3,5 +3,5 @@
 #include "state.hpp"
 
 struct GameOver: public GameState {
-    void DoAction(ActionID action, EntityID ownerID = MaxNumEntities);
+    void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt);
 };

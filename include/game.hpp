@@ -52,6 +52,7 @@ private:
 
     RenderSystem                            renderSystem;
     InputSystem                             inputSystem;
+
 };
 
 void        Center(BoundingBoxComponent& boundingBox, TransformComponent& transform);

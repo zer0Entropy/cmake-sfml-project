@@ -32,6 +32,10 @@ void Game::Update() {
     if(mainWindow.isOpen()) {    
         mainWindow.clear();
         if(currentState) {
+            if(currentState->id == GameState::ID::Gameplay) {
+                GameplayState& gameState{static_cast<GameplayState&>(*currentState)};
+                gameState.RenderLevel(gameState.currentLevel, gameState.player, mainWindow);
+            }
             renderSystem.Update(*currentState);
         }
         mainWindow.display();
@@ -48,7 +52,7 @@ void Game::Update() {
             } break;
             /* GAMEPLAY */
             case GameState::TransitionID::InitGameplay: {
-
+                CreateGameState(GameState::ID::Gameplay);
             } break;
             /* LOAD GAME*/
             case GameState::TransitionID::DisplayLoadGame: {
@@ -125,7 +129,10 @@ void Game::CreateMainMenuState() {
     }
 
     currentState = std::make_unique<MainMenuState>();
-    MainMenuState& gameState = static_cast<MainMenuState&>(*currentState);
+    MainMenuState& gameState{static_cast<MainMenuState&>(*currentState)};
+    gameState.id = GameState::ID::MainMenu;
+    gameState.transitionFlag = GameState::TransitionID::Null;
+    gameState.numEntities = 0;
 
     ResourceMgr::ErrorCode loadFontOutcome{
         resourceMgr.LoadResource((ResourceID)gameState.fontID, Resource::Type::Font, (std::string)gameState.fontPath)
@@ -142,6 +149,40 @@ void Game::CreateMainMenuState() {
 }
 
 void Game::CreateGameplayState() {
+
+    currentState = std::make_unique<GameplayState>();
+    GameplayState& gameState{static_cast<GameplayState&>(*currentState)};
+    gameState.id = GameState::ID::Gameplay;
+    gameState.transitionFlag = GameState::TransitionID::Null;
+    gameState.numEntities = 0;
+
+    ResourceMgr::ErrorCode loadWallOutcome{
+        resourceMgr.LoadResource((ResourceID)gameState.wallTextureID, Resource::Type::Texture, (std::string)gameState.wallTexturePath)
+    };
+
+    ResourceMgr::ErrorCode loadFloorOutcome{
+        resourceMgr.LoadResource((ResourceID)gameState.floorTextureID, Resource::Type::Texture, (std::string)gameState.floorTexturePath)
+    };
+
+    if(loadWallOutcome != ResourceMgr::ErrorCode::Success) {
+         // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
+    }
+    if(loadFloorOutcome != ResourceMgr::ErrorCode::Success) {
+        // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
+    }
+
+    InitLevel(gameState.currentLevel, 0);
+
+    gameState.currentLevel.terrainTextures[(int)Terrain::Type::Ground] = resourceMgr.AcquireTexturePtr((ResourceID)gameState.floorTextureID);
+    gameState.currentLevel.terrainTextures[(int)Terrain::Type::Wall] = resourceMgr.AcquireTexturePtr((ResourceID)gameState.wallTextureID);
+
+    gameState.player.character.name = "PLAYER";
+    gameState.player.character.location = {
+        gameState.currentLevel.map.width / 2,
+        gameState.currentLevel.map.height / 2
+    };
+
+    InitView(gameState.currentLevel.mapView, sf::Vector2f{0.f, 0.f}, windowSize);
     
 }
 

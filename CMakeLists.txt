@@ -17,7 +17,12 @@ find_package(nlohmann_json 3.11.3 REQUIRED)
 add_executable(main
                 src/main.cpp
                 src/game.cpp
+                src/level.cpp
+                src/map.cpp
+                src/terrain.cpp
+                src/tile.cpp
                 src/mainMenu.cpp
+                src/gameplay.cpp
                 src/resource/resourceMgr.cpp
                 src/component/component.cpp
                 src/component/text.cpp
