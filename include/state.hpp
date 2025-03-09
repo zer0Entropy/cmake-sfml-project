@@ -35,6 +35,8 @@ struct GameState {
     ID                                                  id;
     TransitionID                                        transitionFlag;
     unsigned int                                        numEntities;
+    sf::Vector2u                                        windowSize;
+
     std::array<SpriteComponent, MaxNumEntities>         spriteCmps;
     std::array<TextComponent, MaxNumEntities>           textCmps;
     std::array<TransformComponent, MaxNumEntities>      transformCmps;
@@ -45,4 +47,6 @@ struct GameState {
     std::array<CreatureComponent, MaxNumEntities>       creatureCmps;
 
     virtual void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt) = 0;
+
+    void CenterEntity(EntityID ownerID);
 };

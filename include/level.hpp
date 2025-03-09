@@ -19,23 +19,13 @@ struct Level {
     std::array<bool, (unsigned int)Terrain::Type::NumTerrainTypes>          terrainWalkables;
     std::array<bool, (unsigned int)Terrain::Type::NumTerrainTypes>          terrainTransparents;
 
-    struct View {
-        unsigned int            widthInPixels;
-        unsigned int            heightInPixels;
-        sf::Vector2u            sizeInTiles;
-        sf::Vector2u            topLeft;
-        sf::Vector2f            position;
-        sf::Vector2u            centerLocation;
-        std::vector<Tile*>      visibleTiles;
-    };
-
-    View                        mapView;
+    sf::IntRect                 mapView;
 
 };
 
 void InitLevel(Level& level, unsigned int index);
 
-void InitView(Level::View& view, sf::Vector2f position, sf::Vector2u windowSize);
-void UpdateView(Level& level, sf::Vector2u center);
+void InitView(Level& level, sf::Vector2u playerLocation, sf::Vector2u windowSize);
+void UpdateView(Level& level, sf::Vector2u playerLocation);
 
 void PlaceCreature(Level& level, CreatureComponent& creature);

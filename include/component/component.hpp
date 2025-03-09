@@ -30,3 +30,5 @@ using ComponentList = std::array<Component*, (unsigned int)Component::Type::NumT
 using Entity = std::pair<EntityID, ComponentList>;
 
 constexpr unsigned int MaxNumEntities{1024};
+
+Component* GetComponent(Entity& entity, Component::Type type);

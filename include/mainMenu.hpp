@@ -1,6 +1,7 @@
 #pragma once
 
 #include "state.hpp"
+#include "resource/resourceMgr.hpp"
 
 struct MainMenuState: public GameState {
     Entity                          mainMenu;
@@ -33,6 +34,15 @@ struct MainMenuState: public GameState {
     static const sf::Color              fontOutlineColorNormal;
     static const sf::Color              fontOutlineColorHightlight;
     static const sf::Color              fontFillColor;
+
+    ResourceMgr::ErrorCode              LoadMainMenuFont(ResourceMgr& resourceMgr);
+    ResourceMgr::ErrorCode              LoadMainMenuBackground(ResourceMgr& resourceMgr);
+
+    Entity                              CreateMainMenu(ResourceMgr& resourceMgr);
+    Entity                              CreateNewGameOption(ResourceMgr& resourceMgr);
+    Entity                              CreateLoadGameOption(ResourceMgr& resourceMgr);
+    Entity                              CreateSettingsOption(ResourceMgr& resourceMgr);
+    Entity                              CreateQuitGameOption(ResourceMgr& resourceMgr);
 
     void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt);
     void HighlightSelectedOption(EntityID menuOptionID);

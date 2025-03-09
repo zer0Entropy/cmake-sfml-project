@@ -33,16 +33,7 @@ private:
     void                                    CreateGameplayState();
     void                                    CreateGameOverState();
 
-    ResourceMgr::ErrorCode                  LoadMainMenuFont(MainMenuState& gameState);
-    ResourceMgr::ErrorCode                  LoadMainMenuBackground(MainMenuState& gameState);
-
-    std::pair<EntityID, ComponentList>      CreateMainMenu(MainMenuState& gameState);
-    std::pair<EntityID, ComponentList>      CreateNewGameOption(MainMenuState& gameState);
-    std::pair<EntityID, ComponentList>      CreateLoadGameOption(MainMenuState& gameState);
-    std::pair<EntityID, ComponentList>      CreateSettingsOption(MainMenuState& gameState);
-    std::pair<EntityID, ComponentList>      CreateQuitGameOption(MainMenuState& gameState);
-
-    sf::Vector2u                            windowSize;
+    sf::Vector2u                            targetWindowSize;
     std::string                             windowTitle;
 
     ResourceMgr                             resourceMgr;
@@ -54,5 +45,3 @@ private:
     InputSystem                             inputSystem;
 
 };
-
-void        Center(BoundingBoxComponent& boundingBox, TransformComponent& transform);

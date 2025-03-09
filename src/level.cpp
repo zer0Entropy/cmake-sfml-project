@@ -14,38 +14,58 @@ void InitLevel(Level& level, unsigned int index) {
     InitMap(level.map, Terrain{Terrain::Type::Ground, "ground", true, true});
 }
 
-void InitView(Level::View& view, sf::Vector2f position, sf::Vector2u windowSize) {
-    view.sizeInTiles.x = 5 * (windowSize.x / Tile::widthInPixels) / 6;
-    view.sizeInTiles.y = windowSize.y / Tile::heightInPixels;
-    view.widthInPixels = view.sizeInTiles.x * Tile::widthInPixels;
-    view.heightInPixels = view.sizeInTiles.y * Tile::heightInPixels;
-    view.position = position;
-    view.centerLocation = sf::Vector2u{0, 0};
+void InitView(Level& level, sf::Vector2u playerLocation, sf::Vector2u windowSize) {
+  
+    level.mapView.size = {
+        5 * (int)(windowSize.x / Tile::widthInPixels) / 6,
+        (int)(windowSize.y / Tile::heightInPixels)
+    };
+
+    level.mapView.position = {
+        (int)playerLocation.x - (level.mapView.size.x / 2),
+        (int)playerLocation.y - (level.mapView.size.y / 2)
+    };
+
+    // If player is less than one-half the view's width from right edge, don't scroll further
+    if(playerLocation.x > Map::width - (level.mapView.size.x / 2)) {
+        level.mapView.position.x = Map::width - (level.mapView.size.x / 2);
+    }
+    // If player is less than one-half the view's width from left edge, don't scroll further
+    else if(playerLocation.x < level.mapView.size.x / 2) {
+        level.mapView.position.x = 0;
+    }
+    // If player is less than one-half the view's height from bottom edge, don't scroll further
+    if(playerLocation.y > Map::height - (level.mapView.size.y / 2)) {
+        level.mapView.position.y = Map::height - (level.mapView.size.y / 2);
+    }
+    // If player is less than one-half the view's height from top edge, don't scroll further
+    else if(playerLocation.y < level.mapView.size.y / 2) {
+        level.mapView.position.y = 0;
+    }
+
 }
 
-void UpdateView(Level& level, sf::Vector2u center) {
-    level.mapView.visibleTiles.clear();
-    level.mapView.centerLocation = center;
-    level.mapView.topLeft = sf::Vector2u{
-        center.x - (level.mapView.sizeInTiles.x / 2),
-        center.y - (level.mapView.sizeInTiles.y / 2)
+void UpdateView(Level& level, sf::Vector2u playerLocation) {
+    level.mapView.position = {
+        (int)playerLocation.x - (level.mapView.size.x / 2),
+        (int)playerLocation.y - (level.mapView.size.y / 2)
     };
-    if(level.mapView.topLeft.x >= Map::width) {
-        level.mapView.topLeft.x = 0;
+
+    // If player is less than one-half the view's width from right edge, don't scroll further
+    if(playerLocation.x > Map::width - (level.mapView.size.x / 2)) {
+        level.mapView.position.x = Map::width - (level.mapView.size.x / 2);
     }
-    if(level.mapView.topLeft.y >= Map::height) {
-        level.mapView.topLeft.y = 0;
+    // If player is less than one-half the view's width from left edge, don't scroll further
+    else if(playerLocation.x < level.mapView.size.x / 2) {
+        level.mapView.position.x = 0;
     }
-    for(unsigned int y = level.mapView.topLeft.y; y < level.mapView.topLeft.y + level.mapView.sizeInTiles.y; ++y) {
-        if(y >= level.map.height) {
-            break;
-        }
-        for(unsigned int x = level.mapView.topLeft.x; x < level.mapView.topLeft.x + level.mapView.sizeInTiles.x; ++x) {
-            if(x >= level.map.width) {
-                break;
-            }
-            level.mapView.visibleTiles.push_back(&level.map.tiles[y * Map::width + x]);
-        }
+    // If player is less than one-half the view's height from bottom edge, don't scroll further
+    if(playerLocation.y > Map::height - (level.mapView.size.y / 2)) {
+        level.mapView.position.y = Map::height - (level.mapView.size.y / 2);
+    }
+    // If player is less than one-half the view's height from top edge, don't scroll further
+    else if(playerLocation.y < level.mapView.size.y / 2) {
+        level.mapView.position.y = 0;
     }
 }
 
