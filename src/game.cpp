@@ -1,3 +1,4 @@
+#include <ctime>
 #include "../include/game.hpp"
 #include "../include/gameOver.hpp"
 #include "../include/gameplay.hpp"
@@ -5,6 +6,7 @@
 
 Game::Game():
     errorFlag{false},
+    runtimeClock{},
     targetWindowSize{1920u, 1080u},
     windowTitle{"Test Project"},
     mainWindow{
@@ -18,6 +20,10 @@ Game::Game():
     inputSystem{mainWindow},
     renderSystem{mainWindow} {
     
+    std::time_t currentTime{std::time(nullptr)};
+    std::string gameStartedHeader{"Game started at " + std::string(std::asctime(std::localtime(&currentTime)))};
+    logMgr.CreateMessage(gameStartedHeader, "");
+
     std::string windowCreatedHeader{"MainWindow successfully created"};
     std::string targetSizeString{"targetSize=(" + std::to_string(targetWindowSize.x) + ", " + std::to_string(targetWindowSize.y) + ")"};
     std::string actualSizeString{"actualSize=(" + std::to_string(mainWindow.getSize().x) + ", " + std::to_string(mainWindow.getSize().y) + ")"};

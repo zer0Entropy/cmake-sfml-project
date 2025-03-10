@@ -1,5 +1,8 @@
+[INFO] Game started at Sun Mar  9 21:58:28 2025
+
+
 [INFO] MainWindow successfully created
-targetSize=(1920, 1080) actualSize=(1920, 1043)
+targetSize=(1920, 1080) actualSize=(1920, 1080)
 
 [INFO] Frame limit set to 144
 

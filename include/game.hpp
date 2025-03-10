@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include "log.hpp"
 #include "state.hpp"
@@ -36,6 +37,8 @@ private:
 
     sf::Vector2u                            targetWindowSize;
     std::string                             windowTitle;
+
+    sf::Clock                               runtimeClock;
 
     LogMgr                                  logMgr;
     ResourceMgr                             resourceMgr;
