@@ -1,0 +1,12 @@
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] 
+Frame limit set to 144
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1043)
+
+[INFO] 
+Frame limit set to 144
+

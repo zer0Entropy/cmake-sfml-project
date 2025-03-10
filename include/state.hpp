@@ -12,6 +12,8 @@
 #include "component/creature.hpp"
 #include "ui/action.hpp"
 
+class LogMgr;
+
 struct GameState {
 
     enum class ID {
@@ -31,6 +33,8 @@ struct GameState {
         DisplayGameOver,
         Shutdown
     };
+
+    LogMgr*                                             logMgr;
 
     ID                                                  id;
     TransitionID                                        transitionFlag;

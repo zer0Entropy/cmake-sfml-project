@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "log.hpp"
 #include "state.hpp"
 #include "resource/resourceMgr.hpp"
 #include "system/input.hpp"
@@ -36,6 +37,7 @@ private:
     sf::Vector2u                            targetWindowSize;
     std::string                             windowTitle;
 
+    LogMgr                                  logMgr;
     ResourceMgr                             resourceMgr;
     std::unique_ptr<GameState>              currentState;
     std::vector<std::unique_ptr<GameState>> inactiveStates;
@@ -44,4 +46,5 @@ private:
     RenderSystem                            renderSystem;
     InputSystem                             inputSystem;
 
+    static constexpr std::string_view       logPath{"log.txt"};
 };

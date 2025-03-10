@@ -13,10 +13,18 @@ Game::Game():
             sf::Style::Titlebar | sf::Style::Close,
             sf::State::Fullscreen)
     },
+    logMgr{(std::string)Game::logPath},
     inputSystem{mainWindow},
     renderSystem{mainWindow} {
     
-    mainWindow.setFramerateLimit(144);
+    std::string windowCreatedHeader{"MainWindow successfully created"};
+    std::string targetSizeString{"targetSize=(" + std::to_string(targetWindowSize.x) + ", " + std::to_string(targetWindowSize.y) + ")"};
+    std::string actualSizeString{"actualSize=(" + std::to_string(mainWindow.getSize().x) + ", " + std::to_string(mainWindow.getSize().y) + ")"};
+    logMgr.CreateMessage(windowCreatedHeader, targetSizeString + " " + actualSizeString);
+
+    unsigned int frameLimit{144};
+    mainWindow.setFramerateLimit(frameLimit);
+    logMgr.CreateMessage("", "Frame limit set to " + std::to_string(frameLimit));
     CreateGameState(GameState::ID::MainMenu);
 
 }
@@ -124,6 +132,7 @@ void Game::DestroyCurrentGameState() {
 void Game::CreateMainMenuState() {
 
     currentState = std::make_unique<MainMenuState>();
+    currentState->logMgr = &logMgr;
     MainMenuState& gameState{static_cast<MainMenuState&>(*currentState)};
     gameState.id = GameState::ID::MainMenu;
     gameState.transitionFlag = GameState::TransitionID::Null;
@@ -147,6 +156,7 @@ void Game::CreateMainMenuState() {
 void Game::CreateGameplayState() {
 
     currentState = std::make_unique<GameplayState>();
+    currentState->logMgr = &logMgr;
     GameplayState& gameState{static_cast<GameplayState&>(*currentState)};
     gameState.id = GameState::ID::Gameplay;
     gameState.transitionFlag = GameState::TransitionID::Null;
