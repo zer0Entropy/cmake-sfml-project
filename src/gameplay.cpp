@@ -1,4 +1,5 @@
 #include "../include/gameplay.hpp"
+#include "../include/log.hpp"
 
 void GameplayState::CreateLevel(ResourceMgr& resourceMgr) {
     ResourceMgr::ErrorCode loadWallOutcome{
@@ -10,10 +11,26 @@ void GameplayState::CreateLevel(ResourceMgr& resourceMgr) {
     };
 
     if(loadWallOutcome != ResourceMgr::ErrorCode::Success) {
-         // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
+        std::string errorHeader{"Attempt to load texture \"" + std::string(wallTextureID) + "\" failed"};
+        std::string errorBody{"File not found: " + std::string(wallTexturePath)};
+        logMgr->CreateMessage(errorHeader, errorBody, true);
+        errorFlag = true;
+        return;
+    }
+    else {
+        std::string successHeader{"Texture \"" + std::string(wallTextureID) + "\" loaded successfully"};
+        logMgr->CreateMessage(successHeader, "");
     }
     if(loadFloorOutcome != ResourceMgr::ErrorCode::Success) {
-        // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
+        std::string errorHeader{"Attempt to load texture \"" + std::string(floorTextureID) + "\" failed"};
+        std::string errorBody{"File not found: " + std::string(floorTexturePath)};
+        logMgr->CreateMessage(errorHeader, errorBody, true);
+        errorFlag = true;
+        return;
+    }
+    else {
+        std::string successHeader{"Font \"" + std::string(floorTextureID) + "\" loaded successfully"};
+        logMgr->CreateMessage(successHeader, "");
     }
 
     InitLevel(currentLevel, 0);

@@ -68,5 +68,8 @@ void LogMgr::WriteMessage(const LogMessage& message) {
     outputFile.write(message.header.c_str(), message.header.length());
     outputFile.write("\n", 1);
     outputFile.write(message.body.c_str(), message.body.length());
-    outputFile.write("\n\n", 2);
+    if(message.body.length() > 0) {
+        outputFile.write("\n", 1);
+    }
+    outputFile.write("\n", 1);
 }

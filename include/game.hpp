@@ -46,5 +46,7 @@ private:
     RenderSystem                            renderSystem;
     InputSystem                             inputSystem;
 
+    bool                                    errorFlag;
+
     static constexpr std::string_view       logPath{"log.txt"};
 };

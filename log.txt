@@ -1,12 +1,22 @@
 [INFO] MainWindow successfully created
-targetSize=(1920, 1080) actualSize=(1920, 1080)
-
-[INFO] 
-Frame limit set to 144
-
-[INFO] MainWindow successfully created
 targetSize=(1920, 1080) actualSize=(1920, 1043)
 
-[INFO] 
-Frame limit set to 144
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Level 0 created
+
+[INFO] Player successfully created
+name=PLAYER, location=(32, 32)
+
+[INFO] GameplayState successfully created
+
+[INFO] Shutting down...
 

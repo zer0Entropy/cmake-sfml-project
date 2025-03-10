@@ -4,6 +4,7 @@
 #include "../include/mainMenu.hpp"
 
 Game::Game():
+    errorFlag{false},
     targetWindowSize{1920u, 1080u},
     windowTitle{"Test Project"},
     mainWindow{
@@ -24,7 +25,7 @@ Game::Game():
 
     unsigned int frameLimit{144};
     mainWindow.setFramerateLimit(frameLimit);
-    logMgr.CreateMessage("", "Frame limit set to " + std::to_string(frameLimit));
+    logMgr.CreateMessage("Frame limit set to " + std::to_string(frameLimit), "");
     CreateGameState(GameState::ID::MainMenu);
 
 }
@@ -34,6 +35,9 @@ Game::~Game() {
 }
 
 void Game::Update() {
+    if(errorFlag || (currentState && currentState->errorFlag)) {
+        mainWindow.close();
+    }
     if(mainWindow.isOpen() && currentState) {
         inputSystem.Update(*currentState);
     }
@@ -72,6 +76,7 @@ void Game::Update() {
 
             } break;
             case GameState::TransitionID::Shutdown: {
+                logMgr.CreateMessage("Shutting down...", "");
                 currentState.release();
                 for(auto stateIter = inactiveStates.begin(); stateIter != inactiveStates.end(); ++stateIter) {
                     (*stateIter).release();
@@ -110,9 +115,11 @@ void Game::CreateGameState(GameState::ID stateID) {
     switch(stateID) {
         case GameState::ID::MainMenu: {
             CreateMainMenuState();
+            logMgr.CreateMessage("MainMenuState successfully created", "");
         } break;
         case GameState::ID::Gameplay: {
             CreateGameplayState();
+            logMgr.CreateMessage("GameplayState successfully created", "");
         } break;
         case GameState::ID::GameOver: {
             CreateGameOverState();
@@ -132,6 +139,7 @@ void Game::DestroyCurrentGameState() {
 void Game::CreateMainMenuState() {
 
     currentState = std::make_unique<MainMenuState>();
+    currentState->errorFlag = false;
     currentState->logMgr = &logMgr;
     MainMenuState& gameState{static_cast<MainMenuState&>(*currentState)};
     gameState.id = GameState::ID::MainMenu;
@@ -143,8 +151,14 @@ void Game::CreateMainMenuState() {
         resourceMgr.LoadResource((ResourceID)gameState.fontID, Resource::Type::Font, (std::string)gameState.fontPath)
     };
     if(loadFontOutcome != ResourceMgr::ErrorCode::Success) {
-        // TO DO: HANDLE ERROR CODES RETURNED BY LOADRESOURCE!
+        std::string errorHeader{"Attempt to load font \"" + std::string(gameState.fontID) + "\" failed"};
+        std::string errorBody{"File not found: " + std::string(gameState.fontPath)};
+        logMgr.CreateMessage(errorHeader, errorBody, true);
+        errorFlag = true;
+        return;
     }
+    std::string successHeader{"Font \"" + std::string(gameState.fontID) + "\" loaded successfully"};
+    logMgr.CreateMessage(successHeader, "");
 
     gameState.mainMenu = gameState.CreateMainMenu(resourceMgr);
     gameState.newGameOption = gameState.CreateNewGameOption(resourceMgr);
@@ -156,6 +170,7 @@ void Game::CreateMainMenuState() {
 void Game::CreateGameplayState() {
 
     currentState = std::make_unique<GameplayState>();
+    currentState->errorFlag = false;
     currentState->logMgr = &logMgr;
     GameplayState& gameState{static_cast<GameplayState&>(*currentState)};
     gameState.id = GameState::ID::Gameplay;
@@ -164,7 +179,12 @@ void Game::CreateGameplayState() {
     gameState.windowSize = mainWindow.getSize();
 
     gameState.CreateLevel(resourceMgr);
+    logMgr.CreateMessage("Level " + std::to_string(gameState.currentLevel.index) + " created", "");
+
     gameState.player.character = gameState.CreatePlayer(resourceMgr);
+    CreatureComponent& playerCharacter = static_cast<CreatureComponent&>(*GetComponent(gameState.player.character, Component::Type::Creature));
+    logMgr.CreateMessage(   "Player successfully created", "name=" + playerCharacter.name + ", location=(" + 
+                            std::to_string(playerCharacter.location.x) + ", " + std::to_string(playerCharacter.location.y) + ")");
 }
 
 void Game::CreateGameOverState() {

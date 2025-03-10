@@ -34,6 +34,7 @@ struct GameState {
         Shutdown
     };
 
+    bool                                                errorFlag;
     LogMgr*                                             logMgr;
 
     ID                                                  id;
