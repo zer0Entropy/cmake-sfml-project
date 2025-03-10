@@ -1,7 +1,12 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
+
+class RandomNumberGenerator;
 
 class BSPTree {
 public:
@@ -10,11 +15,13 @@ public:
         sf::IntRect     rect;
         Node*           leftChild;
         Node*           rightChild;
-        static constexpr unsigned int minWidth{2};
-        static constexpr unsigned int minHeight{2};
+        static constexpr unsigned int minWidth{6};
+        static constexpr unsigned int minHeight{6};
 
+        Node() = delete;
+        Node(sf::IntRect rect);
+        ~Node();
         bool            IsLeaf() const;
-        bool            Split();
     };
 
     BSPTree() = delete;
@@ -24,7 +31,11 @@ public:
     BSPTree(BSPTree&& move) = delete;
     ~BSPTree();
 
+    bool                SplitNode(Node& node, RandomNumberGenerator& rng);
+    Node*               CreateNode(sf::IntRect rect);
+
 private:
-    sf::Vector2u        mapSize;
-    Node                root;
+    sf::Vector2u                            mapSize;
+    Node*                                   root;
+    std::vector<std::unique_ptr<Node>>      nodeList;
 };

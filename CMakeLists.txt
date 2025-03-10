@@ -17,6 +17,7 @@ find_package(nlohmann_json 3.11.3 REQUIRED)
 add_executable(main
                 src/main.cpp
                 src/log.cpp
+                src/rng.cpp
                 src/game.cpp
                 src/state.cpp
                 src/level.cpp
@@ -34,6 +35,7 @@ add_executable(main
                 src/component/leftClick.cpp
                 src/component/creature.cpp
                 src/system/input.cpp
-                src/system/render.cpp)
+                src/system/render.cpp
+                src/util/bsp.cpp)
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics SFML::Audio nlohmann_json::nlohmann_json)
