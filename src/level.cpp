@@ -17,10 +17,15 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
 
     level.bspTree = std::make_unique<BSPTree>(sf::Vector2u{Map::width, Map::height}, *level.logMgr);
 
+    int minWidth{4};
+    int minHeight{4};
+    int maxWidth{12};
+    int maxHeight{12};
+
     unsigned int numIterations{4};
     BSPTree::Node* rootNode{level.bspTree->CreateRoot()};
     for(unsigned int n = 0; n < numIterations; ++n) {
-        level.bspTree->Split(rng);
+        level.bspTree->Split(minWidth, minHeight, maxWidth, maxHeight, rng);
     }
 
     const auto& leafList{level.bspTree->GetLeafList()};
@@ -51,9 +56,9 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
             int bottomRightMinY{0};
             int bottomRightMaxY{0};
             do {
-                bottomRightMinX = topLeft.x + BSPTree::Node::minWidth;
+                bottomRightMinX = topLeft.x + minWidth;
                 bottomRightMaxX = leaf->rect.position.x + leaf->rect.size.x;
-                bottomRightMinY = topLeft.y + BSPTree::Node::minHeight;
+                bottomRightMinY = topLeft.y + minHeight;
                 bottomRightMaxY = leaf->rect.position.y + leaf->rect.size.y;
             } while(bottomRightMaxX < bottomRightMinX || bottomRightMaxY < bottomRightMinY);
 

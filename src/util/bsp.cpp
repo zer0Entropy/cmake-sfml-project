@@ -39,7 +39,7 @@ BSPTree::Node* BSPTree::CreateRoot() {
     return root;
 }
 
-bool BSPTree::Split(RandomNumberGenerator& rng) {
+bool BSPTree::Split(int minWidth, int maxWidth, int minHeight, int maxHeight,RandomNumberGenerator& rng) {
     bool successful{true};
 
     if(!root) {
@@ -53,14 +53,77 @@ bool BSPTree::Split(RandomNumberGenerator& rng) {
 
     auto leafList{GetLeafList()};
     for(auto& leaf : leafList) {
-        successful = SplitNode(*leaf, rng);
+        successful = SplitNode(*leaf, minWidth, maxWidth, minHeight, maxHeight, rng);
     }
 
     return successful;
 }
 
-bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
+bool BSPTree::SplitNode(Node& node, int minWidth, int maxWidth, int minHeight, int maxHeight, RandomNumberGenerator& rng) {
     bool successful{true};
+    // Ensure that we can fit two new nodes within this one
+    if(node.rect.size.x > maxWidth || node.rect.size.y > maxHeight) {
+        bool splitHorizontal{false};
+        // If width and height are equal, choose horizontal/vertical with 50:50 odds
+        if(node.rect.size.x == node.rect.size.y) {
+            unsigned int coinFlip{rng.GetRandom(0, 1)};
+            if(coinFlip) {
+                splitHorizontal = true;
+            }
+            else {
+                splitHorizontal = false;
+            }
+        }
+        // Otherwise, split horizontally if and only if height > width
+        else if(node.rect.size.y > node.rect.size.x) {
+            splitHorizontal = true;
+        }
+        else {
+            splitHorizontal = false;
+        }
+        // Make sure this node is splittable
+        bool canSplit{false};
+        if(node.rect.size.x > minWidth && node.rect.size.y > minHeight) {
+            canSplit = true;
+        }
+
+        if(canSplit) {
+            if(splitHorizontal) {
+                int newHeight{minHeight + (int)rng.GetRandom(0, node.rect.size.y - minHeight)};
+                sf::IntRect left{
+                    sf::Vector2i{node.rect.position.x, node.rect.position.y},
+                    sf::Vector2i{node.rect.size.x, newHeight}
+                };
+                sf::IntRect right{
+                    sf::Vector2i{node.rect.position.x, node.rect.position.y + newHeight},
+                    sf::Vector2i{node.rect.size.x, node.rect.size.y - newHeight}
+                };
+                node.leftChild = CreateNode(left);
+                node.rightChild = CreateNode(right);
+            }
+            else {
+                int newWidth{minWidth + (int)rng.GetRandom(0, node.rect.size.x - minWidth)};
+                sf::IntRect left{
+                    sf::Vector2i{node.rect.position.x, node.rect.position.y},
+                    sf::Vector2i{newWidth, node.rect.size.y}
+                };
+                sf::IntRect right{
+                    sf::Vector2i{node.rect.position.x + newWidth, node.rect.position.y},
+                    sf::Vector2i{node.rect.size.x - newWidth, node.rect.size.y}
+                };
+                node.leftChild = CreateNode(left);
+                node.rightChild = CreateNode(right);
+            }
+        }
+        else {
+            successful = false;
+        }
+    }
+    else {
+        successful = false;
+    }
+
+    /*
     if(!node.IsLeaf()) {
         successful = SplitNode(*node.leftChild, rng);
         successful = successful && SplitNode(*node.rightChild, rng);
@@ -176,6 +239,7 @@ bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
 
         logMgr.CreateMessage(header, body);
     }
+    */
     return successful;
 }
 

@@ -16,8 +16,6 @@ public:
         sf::IntRect     rect;
         Node*           leftChild;
         Node*           rightChild;
-        static constexpr unsigned int minWidth{6};
-        static constexpr unsigned int minHeight{6};
 
         Node() = delete;
         Node(sf::IntRect rect);
@@ -35,10 +33,10 @@ public:
     std::vector<Node*>  GetLeafList() const;
 
     Node*               CreateRoot();
-    bool                Split(RandomNumberGenerator& rng);
+    bool                Split(int minWidth, int maxWidth, int minHeight, int maxHeight, RandomNumberGenerator& rng);
 
 private:
-    bool                SplitNode(Node& node, RandomNumberGenerator& rng);
+    bool                SplitNode(Node& node, int minWidth, int maxWidth, int minHeight, int maxHeight, RandomNumberGenerator& rng);
     Node*               CreateNode(sf::IntRect rect);
 
     sf::Vector2u                            mapSize;
