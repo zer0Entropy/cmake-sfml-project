@@ -33,6 +33,7 @@ public:
 
     bool                SplitNode(Node& node, RandomNumberGenerator& rng);
     Node*               CreateNode(sf::IntRect rect);
+    std::vector<Node*>  GetLeafList() const;
 
 private:
     sf::Vector2u                            mapSize;

@@ -20,10 +20,19 @@ bool BSPTree::Node::IsLeaf() const {
     return isLeaf;
 }
 
+BSPTree::BSPTree(const sf::Vector2u mapSize):
+    mapSize{mapSize} {
+
+}
+BSPTree::~BSPTree() {
+
+}
+
 bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
     bool successful{true};
     if(!node.IsLeaf()) {
-        successful = false;
+        successful = SplitNode(*node.leftChild, rng);
+        successful = successful && SplitNode(*node.rightChild, rng);
         return successful;
     }
 
@@ -98,5 +107,18 @@ bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
 
 BSPTree::Node* BSPTree::CreateNode(sf::IntRect rect) {
     nodeList.emplace_back(std::make_unique<Node>(rect));
+    if(!root) {
+        root = (*nodeList.rbegin()).get();
+    }
     return (*nodeList.rbegin()).get();
+}
+
+std::vector<BSPTree::Node*> BSPTree::GetLeafList() const {
+    std::vector<Node*>  leafList;
+    for(auto& node : nodeList) {
+        if(node->IsLeaf()) {
+            leafList.push_back(node.get());
+        }
+    }
+    return leafList;
 }

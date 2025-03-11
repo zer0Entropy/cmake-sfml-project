@@ -11,6 +11,7 @@
 #include "resource/resourceMgr.hpp"
 #include "system/input.hpp"
 #include "system/render.hpp"
+#include "rng.hpp"
 
 class MainMenuState;
 class Gameplay;
@@ -39,6 +40,8 @@ private:
     std::string                             windowTitle;
 
     sf::Clock                               runtimeClock;
+
+    RandomNumberGenerator                   rng;
 
     LogMgr                                  logMgr;
     ResourceMgr                             resourceMgr;

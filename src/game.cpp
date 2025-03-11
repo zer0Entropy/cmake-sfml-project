@@ -184,7 +184,7 @@ void Game::CreateGameplayState() {
     gameState.numEntities = 0;
     gameState.windowSize = mainWindow.getSize();
 
-    gameState.CreateLevel(resourceMgr);
+    gameState.CreateLevel(resourceMgr, rng);
     logMgr.CreateMessage("Level " + std::to_string(gameState.currentLevel.index) + " created", "");
 
     gameState.player.character = gameState.CreatePlayer(resourceMgr);

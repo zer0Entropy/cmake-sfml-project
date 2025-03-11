@@ -1,7 +1,7 @@
 #include "../include/gameplay.hpp"
 #include "../include/log.hpp"
 
-void GameplayState::CreateLevel(ResourceMgr& resourceMgr) {
+void GameplayState::CreateLevel(ResourceMgr& resourceMgr, RandomNumberGenerator& rng) {
     ResourceMgr::ErrorCode loadWallOutcome{
         resourceMgr.LoadResource((ResourceID)wallTextureID, Resource::Type::Texture, (std::string)wallTexturePath)
     };
@@ -33,7 +33,7 @@ void GameplayState::CreateLevel(ResourceMgr& resourceMgr) {
         logMgr->CreateMessage(successHeader, "");
     }
 
-    InitLevel(currentLevel, 0);
+    InitLevel(currentLevel, 0, rng);
     currentLevel.terrainTextures[(int)Terrain::Type::Ground] = resourceMgr.AcquireTexturePtr((ResourceID)floorTextureID);
     currentLevel.terrainTextures[(int)Terrain::Type::Wall] = resourceMgr.AcquireTexturePtr((ResourceID)wallTextureID);
 

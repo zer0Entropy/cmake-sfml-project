@@ -1,7 +1,17 @@
 #include "../include/level.hpp"
 #include "../include/component/creature.hpp"
+#include "../include/rng.hpp"
 
-void InitLevel(Level& level, unsigned int index) {
+Level::Level():
+    bspTree{sf::Vector2u{Map::width, Map::height}} {
+
+}
+
+Level::~Level() {
+
+}
+
+void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
     level.index = index;
     for(unsigned int terrainIndex = 0; terrainIndex < (unsigned int)Terrain::Type::NumTerrainTypes; ++terrainIndex) {
         InitTerrain(    level.terrains[terrainIndex],
@@ -11,7 +21,56 @@ void InitLevel(Level& level, unsigned int index) {
                         level.terrainTransparents[terrainIndex]);
 
     }
-    InitMap(level.map, Terrain{Terrain::Type::Ground, "ground", true, true});
+    InitMap(level.map, Terrain{Terrain::Type::Ground, "wall", true, true});
+
+    unsigned int numIterations{4};
+    BSPTree::Node* rootNode{level.bspTree.CreateNode(sf::IntRect{{0, 0}, {Map::width, Map::height}})};
+    for(unsigned int n = 0; n < numIterations; ++n) {
+        level.bspTree.SplitNode(*rootNode, rng);
+    }
+
+    const auto& leafList{level.bspTree.GetLeafList()};
+    for(const auto& leaf : leafList) {
+        sf::Vector2i topLeft, bottomRight;
+        do {
+            int topLeftMinX{0};
+            int topLeftMaxX{0};
+            int topLeftMinY{0};
+            int topLeftMaxY{0};
+            do {
+                topLeftMinX = leaf->rect.position.x;
+                topLeftMaxX = leaf->rect.position.x + (leaf->rect.size.x / 2);
+                topLeftMinY = leaf->rect.position.y;
+                topLeftMaxY = leaf->rect.position.y + (leaf->rect.size.y / 2);
+            } while(topLeftMaxX < topLeftMinX || topLeftMaxY < topLeftMinY);
+
+            topLeft = {
+                (int)rng.GetRandom(topLeftMinX, topLeftMaxX),
+                (int)rng.GetRandom(topLeftMinY, topLeftMaxY) 
+            };
+
+            int bottomRightMinX{0};
+            int bottomRightMaxX{0};
+            int bottomRightMinY{0};
+            int bottomRightMaxY{0};
+            do {
+                bottomRightMinX = topLeft.x + BSPTree::Node::minWidth;
+                bottomRightMaxX = leaf->rect.position.x + leaf->rect.size.x;
+                bottomRightMinY = topLeft.y + BSPTree::Node::minHeight;
+                bottomRightMaxY = leaf->rect.position.y + leaf->rect.size.y;
+            } while(bottomRightMaxX < bottomRightMinX || bottomRightMaxY < bottomRightMinY);
+
+            bottomRight = {
+                (int)rng.GetRandom(bottomRightMinX, bottomRightMaxX),
+                (int)rng.GetRandom(bottomRightMinY, bottomRightMaxY)
+            };
+        } while(bottomRight.x <= topLeft.x || bottomRight.y <= topLeft.y);
+
+        level.roomList.push_back(sf::IntRect{
+            topLeft,
+            sf::Vector2i{bottomRight.x - topLeft.x, bottomRight.y - topLeft.y}
+        });
+    }
 }
 
 void InitView(Level& level, sf::Vector2u playerLocation, sf::Vector2u windowSize) {

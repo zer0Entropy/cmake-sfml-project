@@ -28,7 +28,7 @@ struct GameplayState: public GameState {
     static constexpr unsigned int       playerStartLocationX{Map::width / 2};
     static constexpr unsigned int       playerStartLocationY{Map::height / 2};
 
-    void            CreateLevel(ResourceMgr& resourceMgr);
+    void            CreateLevel(ResourceMgr& resourceMgr, RandomNumberGenerator& rng);
     Entity          CreatePlayer(ResourceMgr& resourceMgr);
 
     void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt);
