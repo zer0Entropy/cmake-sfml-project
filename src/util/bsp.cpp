@@ -30,6 +30,35 @@ BSPTree::~BSPTree() {
 
 }
 
+BSPTree::Node* BSPTree::CreateRoot() {
+    nodeList.clear();
+    root = CreateNode(sf::IntRect{
+        sf::Vector2i{0, 0},
+        sf::Vector2i{(int)mapSize.x, (int)mapSize.y}
+    });
+    return root;
+}
+
+bool BSPTree::Split(RandomNumberGenerator& rng) {
+    bool successful{true};
+
+    if(!root) {
+        root = CreateNode(
+            sf::IntRect{
+                sf::Vector2i{0, 0},
+                sf::Vector2i{(int)mapSize.x, (int)mapSize.y}
+            }
+        );
+    }
+
+    auto leafList{GetLeafList()};
+    for(auto& leaf : leafList) {
+        successful = SplitNode(*leaf, rng);
+    }
+
+    return successful;
+}
+
 bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
     bool successful{true};
     if(!node.IsLeaf()) {
@@ -152,9 +181,6 @@ bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
 
 BSPTree::Node* BSPTree::CreateNode(sf::IntRect rect) {
     nodeList.emplace_back(std::make_unique<Node>(rect));
-    if(!root) {
-        root = (*nodeList.rbegin()).get();
-    }
     return (*nodeList.rbegin()).get();
 }
 

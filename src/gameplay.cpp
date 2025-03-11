@@ -71,6 +71,8 @@ Entity GameplayState::CreatePlayer(ResourceMgr& resourceMgr) {
     UpdateBoundingBox(boundingBoxCmps[playerCharacterID], transformCmps[playerCharacterID], spriteCmps[playerCharacterID]);
     /* CREATURE COMPONENT */
     InitComponent(creatureCmps[playerCharacterID], playerCharacterID, Component::Type::Creature);
+    /* KEYPRESS COMPONENT */
+    InitComponent(keyPressCmps[playerCharacterID], playerCharacterID, Component::Type::KeyPress);
 
     CreatureComponent& playerCharacter{creatureCmps[playerCharacterID]};
     InitCreature(playerCharacter, "PLAYER", playerLocation);
@@ -87,13 +89,47 @@ Entity GameplayState::CreatePlayer(ResourceMgr& resourceMgr) {
     };
 }
 
+bool GameplayState::MovePlayer(sf::Vector2u location) {
+    bool success{false};
+    if(location.x < Map::width && location.y < Map::height) {
+        CreatureComponent& playerCharacter{static_cast<CreatureComponent&>(*GetComponent(player.character, Component::Type::Creature))};
+        // First remove them from previous location
+        currentLevel.map.tiles[playerCharacter.location.y * Map::width + playerCharacter.location.x].occupant = nullptr;
+        // Put player at new location
+        playerCharacter.location = location;
+        currentLevel.map.tiles[location.y * Map::width + location.x].occupant = &playerCharacter;
+        success = true;
+    }
+    return success;
+}
+
 void GameplayState::DoAction(ActionID action, std::optional<EntityID> ownerID) {
+
+    const CreatureComponent& playerCharacter{static_cast<CreatureComponent&>(*GetComponent(player.character, Component::Type::Creature))};
+    const auto currentLocation{playerCharacter.location};
+    auto moveLocation{currentLocation};
+    if(action == ActionID::PressDirectionLeft) {
+        moveLocation.x--;
+    }
+    else if(action == ActionID::PressDirectionRight) {
+        moveLocation.x++;
+    }
+    else if(action == ActionID::PressDirectionUp) {
+        moveLocation.y--;
+    }
+    else if(action == ActionID::PressDirectionDown) {
+        moveLocation.y++;
+    }
+    bool attemptMove{MovePlayer(moveLocation)};
 
 }
 
 void GameplayState::RenderLevel(Level& level, const Player& player, sf::RenderWindow& window) {
     CreatureComponent& playerCharacter{creatureCmps[player.character.first]};
     UpdateView(level, playerCharacter.location);
+
+    assert(level.mapView.position.y + level.mapView.size.y < Map::height && "MapView height > Map height");
+    assert(level.mapView.position.x + level.mapView.size.x < Map::width && "MapView width > Map width");
 
     for(unsigned int y = level.mapView.position.y; y < level.mapView.position.y + level.mapView.size.y; ++y) {
         for(unsigned int x = level.mapView.position.x; x < level.mapView.position.x + level.mapView.size.x; ++x) {

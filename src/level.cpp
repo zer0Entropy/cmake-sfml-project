@@ -18,9 +18,9 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
     level.bspTree = std::make_unique<BSPTree>(sf::Vector2u{Map::width, Map::height}, *level.logMgr);
 
     unsigned int numIterations{4};
-    BSPTree::Node* rootNode{level.bspTree->CreateNode(sf::IntRect{{0, 0}, {Map::width, Map::height}})};
+    BSPTree::Node* rootNode{level.bspTree->CreateRoot()};
     for(unsigned int n = 0; n < numIterations; ++n) {
-        level.bspTree->SplitNode(*rootNode, rng);
+        level.bspTree->Split(rng);
     }
 
     const auto& leafList{level.bspTree->GetLeafList()};
@@ -43,6 +43,9 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
                 (int)rng.GetRandom(topLeftMinY, topLeftMaxY) 
             };
 
+            assert(topLeft.x < Map::width && "BSPNode dimensions exceed MapWidth");
+            assert(topLeft.y < Map::height && "BSPNode dimensions exceed MapHeight");
+
             int bottomRightMinX{0};
             int bottomRightMaxX{0};
             int bottomRightMinY{0};
@@ -58,7 +61,14 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
                 (int)rng.GetRandom(bottomRightMinX, bottomRightMaxX),
                 (int)rng.GetRandom(bottomRightMinY, bottomRightMaxY)
             };
+
+            assert(bottomRight.x < Map::width && "BSPNode dimensions exceed MapWidth");
+            assert(bottomRight.y < Map::height && "BSPNode dimensions exceed MapHeight");
+
         } while(bottomRight.x <= topLeft.x || bottomRight.y <= topLeft.y);
+
+        assert(bottomRight.x > topLeft.x && "Attempt to create impossible room (bad width)");
+        assert(bottomRight.y > topLeft.y && "Attempt to create impossible room (bad height)");
 
         level.roomList.push_back(sf::IntRect{
             topLeft,

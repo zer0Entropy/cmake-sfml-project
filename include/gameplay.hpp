@@ -31,8 +31,10 @@ struct GameplayState: public GameState {
     void            CreateLevel(ResourceMgr& resourceMgr, RandomNumberGenerator& rng);
     Entity          CreatePlayer(ResourceMgr& resourceMgr);
 
+    bool            MovePlayer(sf::Vector2u location);
+
     void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt);
     void RenderLevel(Level& level, const Player& player, sf::RenderWindow& window);
     void UpdatePlayer();
-    
+
 };

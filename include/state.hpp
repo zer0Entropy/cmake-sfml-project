@@ -9,6 +9,7 @@
 #include "component/widget.hpp"
 #include "component/mouseOver.hpp"
 #include "component/leftClick.hpp"
+#include "component/keyPress.hpp"
 #include "component/creature.hpp"
 #include "ui/action.hpp"
 
@@ -49,6 +50,7 @@ struct GameState {
     std::array<WidgetComponent, MaxNumEntities>         widgetCmps;
     std::array<MouseOverComponent, MaxNumEntities>      mouseOverCmps;
     std::array<LeftClickComponent, MaxNumEntities>      leftClickCmps;
+    std::array<KeyPressComponent, MaxNumEntities>       keyPressCmps;
     std::array<CreatureComponent, MaxNumEntities>       creatureCmps;
 
     virtual void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt) = 0;

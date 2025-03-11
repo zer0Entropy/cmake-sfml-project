@@ -17,7 +17,7 @@ void InputSystem::Update(GameState& gameState) {
         if(event->is<sf::Event::Closed>()) {
             mainWindow.close();
         }
-        else if(const auto& mouseMove = event->getIf<sf::Event::MouseMoved>()) {
+        else if(const auto* mouseMove = event->getIf<sf::Event::MouseMoved>()) {
             gameState.DoAction(ActionID::ResetMenuSelection);
             for(unsigned int n = 0; n < gameState.numEntities; ++n) {
                 const auto& boundingBoxCmp{gameState.boundingBoxCmps[n]};
@@ -30,7 +30,7 @@ void InputSystem::Update(GameState& gameState) {
                 }
             }
         }
-        else if(const auto& mouseClick = event->getIf<sf::Event::MouseButtonPressed>()) {
+        else if(const auto* mouseClick = event->getIf<sf::Event::MouseButtonPressed>()) {
             if(mouseClick->button == sf::Mouse::Button::Left) {
                 for(unsigned int n = 0; n < gameState.numEntities; ++n) {
                     const auto& boundingBoxCmp{gameState.boundingBoxCmps[n]};
@@ -41,6 +41,15 @@ void InputSystem::Update(GameState& gameState) {
                             break;
                         }
                     }
+                }
+            }
+        }
+        else if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            for(unsigned int n = 0; n < gameState.numEntities; ++n) {
+                const auto& keyPressCmp{gameState.keyPressCmps[n]};
+                if(keyPressCmp.enabled) {
+                    keyPressCmp.Notify(gameState, *keyPressed);
+                    break;
                 }
             }
         }

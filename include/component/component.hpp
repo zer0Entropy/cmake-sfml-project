@@ -13,6 +13,7 @@ struct Component {
         MouseOver,
         LeftClick,
         RightClick,
+        KeyPress,
         Widget,
         Creature,
         NumTypes

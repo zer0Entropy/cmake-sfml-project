@@ -32,11 +32,15 @@ public:
     BSPTree(BSPTree&& move) = delete;
     ~BSPTree();
 
-    bool                SplitNode(Node& node, RandomNumberGenerator& rng);
-    Node*               CreateNode(sf::IntRect rect);
     std::vector<Node*>  GetLeafList() const;
 
+    Node*               CreateRoot();
+    bool                Split(RandomNumberGenerator& rng);
+
 private:
+    bool                SplitNode(Node& node, RandomNumberGenerator& rng);
+    Node*               CreateNode(sf::IntRect rect);
+
     sf::Vector2u                            mapSize;
     LogMgr&                                 logMgr;
     Node*                                   root;

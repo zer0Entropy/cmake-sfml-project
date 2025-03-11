@@ -10,6 +10,9 @@ enum class ActionID {
     Shutdown,
     SetMenuSelection,
     ResetMenuSelection,
-    PressMenuSelection
-
+    PressMenuSelection,
+    PressDirectionLeft,
+    PressDirectionRight,
+    PressDirectionUp,
+    PressDirectionDown
 };
