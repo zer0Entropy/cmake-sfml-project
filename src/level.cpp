@@ -1,15 +1,7 @@
+#include <cassert>
 #include "../include/level.hpp"
 #include "../include/component/creature.hpp"
 #include "../include/rng.hpp"
-
-Level::Level():
-    bspTree{sf::Vector2u{Map::width, Map::height}} {
-
-}
-
-Level::~Level() {
-
-}
 
 void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
     level.index = index;
@@ -21,15 +13,17 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
                         level.terrainTransparents[terrainIndex]);
 
     }
-    InitMap(level.map, Terrain{Terrain::Type::Ground, "wall", true, true});
+    InitMap(level.map, level.terrains[(int)Terrain::Type::Ground]);
+
+    level.bspTree = std::make_unique<BSPTree>(sf::Vector2u{Map::width, Map::height}, *level.logMgr);
 
     unsigned int numIterations{4};
-    BSPTree::Node* rootNode{level.bspTree.CreateNode(sf::IntRect{{0, 0}, {Map::width, Map::height}})};
+    BSPTree::Node* rootNode{level.bspTree->CreateNode(sf::IntRect{{0, 0}, {Map::width, Map::height}})};
     for(unsigned int n = 0; n < numIterations; ++n) {
-        level.bspTree.SplitNode(*rootNode, rng);
+        level.bspTree->SplitNode(*rootNode, rng);
     }
 
-    const auto& leafList{level.bspTree.GetLeafList()};
+    const auto& leafList{level.bspTree->GetLeafList()};
     for(const auto& leaf : leafList) {
         sf::Vector2i topLeft, bottomRight;
         do {
@@ -70,6 +64,29 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
             topLeft,
             sf::Vector2i{bottomRight.x - topLeft.x, bottomRight.y - topLeft.y}
         });
+    }
+}
+
+void InitRooms(Level& level) {
+    for(const auto& room : level.roomList) {
+        const sf::Vector2i topLeft{room.position.x, room.position.y};
+        const sf::Vector2i bottomRight{room.position.x + room.size.x, room.position.y + room.size.y};
+
+        assert(bottomRight.x <= Map::width && "Room dimensions exceed Map::width");
+        assert(bottomRight.y <= Map::height && "Room dimensions exceed Map::height");
+
+        for(unsigned int n = 0; n < room.size.x; ++n) {
+            Tile& topTile{level.map.tiles[topLeft.y * Map::width + topLeft.x + n]};
+            Tile& bottomTile{level.map.tiles[(topLeft.y + room.size.y) * Map::width + topLeft.x + n]};
+            topTile.terrain = level.terrains[(int)Terrain::Type::Wall];
+            bottomTile.terrain = level.terrains[(int)Terrain::Type::Wall];
+        }
+        for(unsigned int n = 0; n < room.size.y; ++n) {
+            Tile& leftTile{level.map.tiles[(topLeft.y  + n) * Map::width + topLeft.x]};
+            Tile& rightTile{level.map.tiles[(topLeft.y + n) * Map::width + topLeft.x + room.size.x]};
+            leftTile.terrain = level.terrains[(int)Terrain::Type::Wall];
+            rightTile.terrain = level.terrains[(int)Terrain::Type::Wall];
+        }
     }
 }
 

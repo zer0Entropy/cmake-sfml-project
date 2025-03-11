@@ -1,5 +1,6 @@
 #include "../../include/util/bsp.hpp"
 #include "../../include/rng.hpp"
+#include "../../include/log.hpp"
 
 BSPTree::Node::Node(sf::IntRect rect):
     rect{rect},
@@ -20,8 +21,9 @@ bool BSPTree::Node::IsLeaf() const {
     return isLeaf;
 }
 
-BSPTree::BSPTree(const sf::Vector2u mapSize):
-    mapSize{mapSize} {
+BSPTree::BSPTree(const sf::Vector2u mapSize, LogMgr& logMgr):
+    mapSize{mapSize},
+    logMgr{logMgr} {
 
 }
 BSPTree::~BSPTree() {
@@ -46,6 +48,16 @@ bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
             }
             else {
                 successful = false;
+                std::string header{"BSPTree::Node vertical split failure"};
+                std::string body{"Attempt to split node with position=("};
+                body += std::to_string(node.rect.position.x);
+                body += ", " + std::to_string(node.rect.position.y) + ") size=(";
+                body += std::to_string(node.rect.size.x);
+                body += ", " + std::to_string(node.rect.size.y) + ") failed - splitPointMax(";
+                body += std::to_string(splitPointMax);
+                body += ") < Node::minWidth(";
+                body += std::to_string(Node::minWidth) + ")";
+                logMgr.CreateMessage(header, body, true);
                 return successful;
             }
         }
@@ -79,6 +91,16 @@ bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
             }
             else {
                 successful = false;
+                std::string header{"BSPTree::Node horizontal split failure"};
+                std::string body{"Attempt to split node with position=("};
+                body += std::to_string(node.rect.position.x);
+                body += ", " + std::to_string(node.rect.position.y) + ") size=(";
+                body += std::to_string(node.rect.size.x);
+                body += ", " + std::to_string(node.rect.size.y) + ") failed - splitPointMax(";
+                body += std::to_string(splitPointMax);
+                body += ") < Node::minHeight(";
+                body += std::to_string(Node::minHeight) + ")";
+                logMgr.CreateMessage(header, body, true);
                 return successful;
             }
         }
@@ -101,6 +123,29 @@ bool BSPTree::SplitNode(Node& node, RandomNumberGenerator& rng) {
                 node.rect.position.y + node.rect.size.y - splitPoint - 1
             }
         });
+    }
+    if(successful) {
+        std::string header{"BSPTree::Node successfully split"};
+        std::string body{"Node with position=("};
+        body += std::to_string(node.rect.position.x);
+        body += ", " + std::to_string(node.rect.position.y) + ") size=(";
+        body += std::to_string(node.rect.size.x);
+        body += ", " + std::to_string(node.rect.size.y) + ") was split into ";
+        body += "leftChild {position=(";
+        body += std::to_string(node.leftChild->rect.position.x);
+        body += ", " + std::to_string(node.leftChild->rect.position.y);
+        body += ") size=(";
+        body += std::to_string(node.leftChild->rect.size.x);
+        body += ", " + std::to_string(node.leftChild->rect.size.y);
+        body += ")} & rightChild {position=(";
+        body += std::to_string(node.rightChild->rect.position.x);
+        body += ", " + std::to_string(node.rightChild->rect.position.y);
+        body += ") size=(";
+        body += std::to_string(node.rightChild->rect.size.x);
+        body += ", " + std::to_string(node.rightChild->rect.size.y);
+        body += ")}";
+
+        logMgr.CreateMessage(header, body);
     }
     return successful;
 }

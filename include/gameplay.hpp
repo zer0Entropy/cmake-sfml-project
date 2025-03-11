@@ -34,4 +34,5 @@ struct GameplayState: public GameState {
     void DoAction(ActionID action, std::optional<EntityID> ownerID = std::nullopt);
     void RenderLevel(Level& level, const Player& player, sf::RenderWindow& window);
     void UpdatePlayer();
+    
 };

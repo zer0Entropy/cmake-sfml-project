@@ -2,6 +2,8 @@
 #include "../include/log.hpp"
 
 void GameplayState::CreateLevel(ResourceMgr& resourceMgr, RandomNumberGenerator& rng) {
+    currentLevel.logMgr = logMgr;
+
     ResourceMgr::ErrorCode loadWallOutcome{
         resourceMgr.LoadResource((ResourceID)wallTextureID, Resource::Type::Texture, (std::string)wallTexturePath)
     };
@@ -36,6 +38,8 @@ void GameplayState::CreateLevel(ResourceMgr& resourceMgr, RandomNumberGenerator&
     InitLevel(currentLevel, 0, rng);
     currentLevel.terrainTextures[(int)Terrain::Type::Ground] = resourceMgr.AcquireTexturePtr((ResourceID)floorTextureID);
     currentLevel.terrainTextures[(int)Terrain::Type::Wall] = resourceMgr.AcquireTexturePtr((ResourceID)wallTextureID);
+
+    InitRooms(currentLevel);
 
     InitView(currentLevel, sf::Vector2u{playerStartLocationX, playerStartLocationY}, windowSize);
 }

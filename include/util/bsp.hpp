@@ -7,6 +7,7 @@
 #include <SFML/System/Vector2.hpp>
 
 class RandomNumberGenerator;
+class LogMgr;
 
 class BSPTree {
 public:
@@ -25,7 +26,7 @@ public:
     };
 
     BSPTree() = delete;
-    BSPTree(const sf::Vector2u mapSize);
+    BSPTree(const sf::Vector2u mapSize, LogMgr& logMgr);
     BSPTree(const BSPTree& copy) = delete;
     BSPTree(BSPTree& copy) = delete;
     BSPTree(BSPTree&& move) = delete;
@@ -37,6 +38,7 @@ public:
 
 private:
     sf::Vector2u                            mapSize;
+    LogMgr&                                 logMgr;
     Node*                                   root;
     std::vector<std::unique_ptr<Node>>      nodeList;
 };
