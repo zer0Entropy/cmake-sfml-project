@@ -132,22 +132,27 @@ void InitView(Level& level, sf::Vector2u playerLocation, sf::Vector2u windowSize
 }
 
 void UpdateView(Level& level, sf::Vector2u playerLocation) {
+    assert(level.mapView.position.x + level.mapView.size.x < Map::width && "MapView bounds exceed Map width");
+    assert(level.mapView.position.y + level.mapView.size.y < Map::height && "MapView bounds exceed Map height");
+
     level.mapView.position = {
         (int)playerLocation.x - (level.mapView.size.x / 2),
         (int)playerLocation.y - (level.mapView.size.y / 2)
     };
 
     // If player is less than one-half the view's width from right edge, don't scroll further
-    if(playerLocation.x > Map::width - (level.mapView.size.x / 2)) {
-        level.mapView.position.x = Map::width - (level.mapView.size.x / 2);
+    //if(playerLocation.x > Map::width - (level.mapView.size.x / 2)) {
+    if(level.mapView.position.x + level.mapView.size.x > Map::width) {
+        level.mapView.position.x = Map::width - level.mapView.size.x - 1;
     }
     // If player is less than one-half the view's width from left edge, don't scroll further
     else if(playerLocation.x < level.mapView.size.x / 2) {
         level.mapView.position.x = 0;
     }
     // If player is less than one-half the view's height from bottom edge, don't scroll further
-    if(playerLocation.y > Map::height - (level.mapView.size.y / 2)) {
-        level.mapView.position.y = Map::height - (level.mapView.size.y / 2);
+    //if(playerLocation.y > Map::height - (level.mapView.size.y / 2)) {
+    if(level.mapView.position.y + level.mapView.size.y > Map::height) {
+        level.mapView.position.y = Map::height - level.mapView.size.y - 1;
     }
     // If player is less than one-half the view's height from top edge, don't scroll further
     else if(playerLocation.y < level.mapView.size.y / 2) {
