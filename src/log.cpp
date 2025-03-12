@@ -72,4 +72,5 @@ void LogMgr::WriteMessage(const LogMessage& message) {
         outputFile.write("\n", 1);
     }
     outputFile.write("\n", 1);
+    outputFile.flush();
 }

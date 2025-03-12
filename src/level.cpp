@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include "../include/level.hpp"
 #include "../include/component/creature.hpp"
 #include "../include/rng.hpp"
@@ -22,7 +23,7 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
     int maxWidth{12};
     int maxHeight{12};
 
-    unsigned int numIterations{4};
+    unsigned int numIterations{3};
     BSPTree::Node* rootNode{level.bspTree->CreateRoot()};
     for(unsigned int n = 0; n < numIterations; ++n) {
         level.bspTree->Split(minWidth, minHeight, maxWidth, maxHeight, rng);
@@ -30,55 +31,17 @@ void InitLevel(Level& level, unsigned int index, RandomNumberGenerator& rng) {
 
     const auto& leafList{level.bspTree->GetLeafList()};
     for(const auto& leaf : leafList) {
-        sf::Vector2i topLeft, bottomRight;
-        do {
-            int topLeftMinX{0};
-            int topLeftMaxX{0};
-            int topLeftMinY{0};
-            int topLeftMaxY{0};
-            do {
-                topLeftMinX = leaf->rect.position.x;
-                topLeftMaxX = leaf->rect.position.x + (leaf->rect.size.x / 2);
-                topLeftMinY = leaf->rect.position.y;
-                topLeftMaxY = leaf->rect.position.y + (leaf->rect.size.y / 2);
-            } while(topLeftMaxX < topLeftMinX || topLeftMaxY < topLeftMinY);
-
-            topLeft = {
-                (int)rng.GetRandom(topLeftMinX, topLeftMaxX),
-                (int)rng.GetRandom(topLeftMinY, topLeftMaxY) 
-            };
-
-            assert(topLeft.x < Map::width && "BSPNode dimensions exceed MapWidth");
-            assert(topLeft.y < Map::height && "BSPNode dimensions exceed MapHeight");
-
-            int bottomRightMinX{0};
-            int bottomRightMaxX{0};
-            int bottomRightMinY{0};
-            int bottomRightMaxY{0};
-            do {
-                bottomRightMinX = topLeft.x + minWidth;
-                bottomRightMaxX = leaf->rect.position.x + leaf->rect.size.x;
-                bottomRightMinY = topLeft.y + minHeight;
-                bottomRightMaxY = leaf->rect.position.y + leaf->rect.size.y;
-            } while(bottomRightMaxX < bottomRightMinX || bottomRightMaxY < bottomRightMinY);
-
-            bottomRight = {
-                (int)rng.GetRandom(bottomRightMinX, bottomRightMaxX),
-                (int)rng.GetRandom(bottomRightMinY, bottomRightMaxY)
-            };
-
-            assert(bottomRight.x < Map::width && "BSPNode dimensions exceed MapWidth");
-            assert(bottomRight.y < Map::height && "BSPNode dimensions exceed MapHeight");
-
-        } while(bottomRight.x <= topLeft.x || bottomRight.y <= topLeft.y);
-
-        assert(bottomRight.x > topLeft.x && "Attempt to create impossible room (bad width)");
-        assert(bottomRight.y > topLeft.y && "Attempt to create impossible room (bad height)");
-
-        level.roomList.push_back(sf::IntRect{
-            topLeft,
-            sf::Vector2i{bottomRight.x - topLeft.x, bottomRight.y - topLeft.y}
-        });
+        sf::Vector2i roomSize{
+            minWidth + (int)rng.GetRandom(0, leaf->rect.size.x - minWidth),
+            minHeight + (int)rng.GetRandom(0, leaf->rect.size.y - minHeight)
+        };
+        sf::Vector2i topLeft{
+            leaf->rect.position.x + (int)rng.GetRandom(0, leaf->rect.size.x - roomSize.x),
+            leaf->rect.position.y + (int)rng.GetRandom(0, leaf->rect.size.y - roomSize.y)
+        };
+        if(topLeft.x + roomSize.x < Map::width && topLeft.y + roomSize.y < Map::height) {
+            level.roomList.push_back(sf::IntRect{topLeft, roomSize});
+        }
     }
 }
 
@@ -87,8 +50,8 @@ void InitRooms(Level& level) {
         const sf::Vector2i topLeft{room.position.x, room.position.y};
         const sf::Vector2i bottomRight{room.position.x + room.size.x, room.position.y + room.size.y};
 
-        assert(bottomRight.x <= Map::width && "Room dimensions exceed Map::width");
-        assert(bottomRight.y <= Map::height && "Room dimensions exceed Map::height");
+        assert(bottomRight.x < Map::width && "Room dimensions exceed Map::width");
+        assert(bottomRight.y < Map::height && "Room dimensions exceed Map::height");
 
         for(unsigned int n = 0; n < room.size.x; ++n) {
             Tile& topTile{level.map.tiles[topLeft.y * Map::width + topLeft.x + n]};
@@ -109,7 +72,7 @@ void InitView(Level& level, sf::Vector2u playerLocation, sf::Vector2u windowSize
   
     level.mapView.size = {
         5 * (int)(windowSize.x / Tile::widthInPixels) / 6,
-        (int)(windowSize.y / Tile::heightInPixels)
+        (int)floor(windowSize.y / Tile::heightInPixels)
     };
 
     level.mapView.position = {
@@ -147,7 +110,7 @@ void UpdateView(Level& level, sf::Vector2u playerLocation) {
 
     // If player is less than one-half the view's width from right edge, don't scroll further
     //if(playerLocation.x > Map::width - (level.mapView.size.x / 2)) {
-    if(level.mapView.position.x + level.mapView.size.x > Map::width) {
+    if(level.mapView.position.x + level.mapView.size.x >= Map::width) {
         level.mapView.position.x = Map::width - level.mapView.size.x - 1;
     }
     // If player is less than one-half the view's width from left edge, don't scroll further
@@ -156,7 +119,7 @@ void UpdateView(Level& level, sf::Vector2u playerLocation) {
     }
     // If player is less than one-half the view's height from bottom edge, don't scroll further
     //if(playerLocation.y > Map::height - (level.mapView.size.y / 2)) {
-    if(level.mapView.position.y + level.mapView.size.y > Map::height) {
+    if(level.mapView.position.y + level.mapView.size.y >= Map::height) {
         level.mapView.position.y = Map::height - level.mapView.size.y - 1;
     }
     // If player is less than one-half the view's height from top edge, don't scroll further
