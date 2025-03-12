@@ -128,8 +128,8 @@ void GameplayState::RenderLevel(Level& level, const Player& player, sf::RenderWi
     CreatureComponent& playerCharacter{creatureCmps[player.character.first]};
     UpdateView(level, playerCharacter.location);
 
-    assert(level.mapView.position.y + level.mapView.size.y < Map::height && "MapView height > Map height");
-    assert(level.mapView.position.x + level.mapView.size.x < Map::width && "MapView width > Map width");
+    assert(level.mapView.position.y + level.mapView.size.y <= Map::height && "MapView height > Map height");
+    assert(level.mapView.position.x + level.mapView.size.x <= Map::width && "MapView width > Map width");
 
     for(unsigned int y = level.mapView.position.y; y < level.mapView.position.y + level.mapView.size.y; ++y) {
         for(unsigned int x = level.mapView.position.x; x < level.mapView.position.x + level.mapView.size.x; ++x) {

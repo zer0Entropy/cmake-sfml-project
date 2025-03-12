@@ -1045,3 +1045,546 @@ name=PLAYER, location=(32, 32)
 
 [INFO] Shutting down...
 
+[INFO] Game started at Wed Mar 12 12:15:59 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(64, 64)
+
+[INFO] Creating node #2
+position=(0, 64) size=(64, 0)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(35, 64)
+
+[INFO] Creating node #4
+position=(35, 0) size=(29, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(35, 64)}
+
+[INFO] Creating node #5
+position=(0, 0) size=(35, 44)
+
+[INFO] Creating node #6
+position=(0, 44) size=(35, 20)
+
+[INFO] Splitting horizontally
+BSPNode {position=(35, 0) size=(29, 64)}
+
+[INFO] Creating node #7
+position=(35, 0) size=(29, 54)
+
+[INFO] Creating node #8
+position=(35, 54) size=(29, 10)
+
+[INFO] Game started at Wed Mar 12 12:16:04 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(64, 59)
+
+[INFO] Creating node #2
+position=(0, 59) size=(64, 5)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 59)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(53, 59)
+
+[INFO] Creating node #4
+position=(53, 0) size=(11, 59)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(53, 59)}
+
+[INFO] Creating node #5
+position=(0, 0) size=(53, 45)
+
+[INFO] Creating node #6
+position=(0, 45) size=(53, 14)
+
+[INFO] Splitting horizontally
+BSPNode {position=(53, 0) size=(11, 59)}
+
+[INFO] Creating node #7
+position=(53, 0) size=(11, 13)
+
+[INFO] Creating node #8
+position=(53, 13) size=(11, 46)
+
+[INFO] Level 0 created
+
+[INFO] Player successfully created
+name=PLAYER, location=(32, 32)
+
+[INFO] GameplayState successfully created
+
+[INFO] Shutting down...
+
+[INFO] Game started at Wed Mar 12 12:19:29 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(26, 64)
+
+[INFO] Creating node #2
+position=(26, 0) size=(38, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(26, 64)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(26, 44)
+
+[INFO] Creating node #4
+position=(0, 44) size=(26, 20)
+
+[INFO] Splitting horizontally
+BSPNode {position=(26, 0) size=(38, 64)}
+
+[INFO] Creating node #5
+position=(26, 0) size=(38, 23)
+
+[INFO] Creating node #6
+position=(26, 23) size=(38, 41)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(26, 44)}
+
+[INFO] Creating node #7
+position=(0, 0) size=(26, 41)
+
+[INFO] Creating node #8
+position=(0, 41) size=(26, 3)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 44) size=(26, 20)}
+
+[INFO] Creating node #9
+position=(0, 44) size=(25, 20)
+
+[INFO] Creating node #10
+position=(25, 44) size=(1, 20)
+
+[INFO] Splitting vertically
+BSPNode {position=(26, 0) size=(38, 23)}
+
+[INFO] Creating node #11
+position=(26, 0) size=(23, 23)
+
+[INFO] Creating node #12
+position=(49, 0) size=(15, 23)
+
+[INFO] Splitting horizontally
+BSPNode {position=(26, 23) size=(38, 41)}
+
+[INFO] Creating node #13
+position=(26, 23) size=(38, 33)
+
+[INFO] Creating node #14
+position=(26, 56) size=(38, 8)
+
+[INFO] Game started at Wed Mar 12 12:19:36 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(47, 64)
+
+[INFO] Creating node #2
+position=(47, 0) size=(17, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(47, 64)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(47, 38)
+
+[INFO] Creating node #4
+position=(0, 38) size=(47, 26)
+
+[INFO] Splitting horizontally
+BSPNode {position=(47, 0) size=(17, 64)}
+
+[INFO] Creating node #5
+position=(47, 0) size=(17, 23)
+
+[INFO] Creating node #6
+position=(47, 23) size=(17, 41)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(47, 38)}
+
+[INFO] Creating node #7
+position=(0, 0) size=(14, 38)
+
+[INFO] Creating node #8
+position=(14, 0) size=(33, 38)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 38) size=(47, 26)}
+
+[INFO] Creating node #9
+position=(0, 38) size=(6, 26)
+
+[INFO] Creating node #10
+position=(6, 38) size=(41, 26)
+
+[INFO] Splitting horizontally
+BSPNode {position=(47, 0) size=(17, 23)}
+
+[INFO] Creating node #11
+position=(47, 0) size=(17, 13)
+
+[INFO] Creating node #12
+position=(47, 13) size=(17, 10)
+
+[INFO] Splitting horizontally
+BSPNode {position=(47, 23) size=(17, 41)}
+
+[INFO] Creating node #13
+position=(47, 23) size=(17, 22)
+
+[INFO] Creating node #14
+position=(47, 45) size=(17, 19)
+
+[INFO] Level 0 created
+
+[INFO] Player successfully created
+name=PLAYER, location=(32, 32)
+
+[INFO] GameplayState successfully created
+
+[INFO] Game started at Wed Mar 12 12:20:44 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(11, 64)
+
+[INFO] Creating node #2
+position=(11, 0) size=(53, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(11, 64)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(11, 42)
+
+[INFO] Creating node #4
+position=(0, 42) size=(11, 22)
+
+[INFO] Splitting horizontally
+BSPNode {position=(11, 0) size=(53, 64)}
+
+[INFO] Creating node #5
+position=(11, 0) size=(53, 40)
+
+[INFO] Creating node #6
+position=(11, 40) size=(53, 24)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(11, 42)}
+
+[INFO] Creating node #7
+position=(0, 0) size=(11, 22)
+
+[INFO] Creating node #8
+position=(0, 22) size=(11, 20)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 42) size=(11, 22)}
+
+[INFO] Creating node #9
+position=(0, 42) size=(11, 17)
+
+[INFO] Creating node #10
+position=(0, 59) size=(11, 5)
+
+[INFO] Splitting vertically
+BSPNode {position=(11, 0) size=(53, 40)}
+
+[INFO] Creating node #11
+position=(11, 0) size=(41, 40)
+
+[INFO] Creating node #12
+position=(52, 0) size=(12, 40)
+
+[INFO] Splitting vertically
+BSPNode {position=(11, 40) size=(53, 24)}
+
+[INFO] Creating node #13
+position=(11, 40) size=(15, 24)
+
+[INFO] Creating node #14
+position=(26, 40) size=(38, 24)
+
+[INFO] Level 0 created
+
+[INFO] Player successfully created
+name=PLAYER, location=(32, 32)
+
+[INFO] GameplayState successfully created
+
+[INFO] Game started at Wed Mar 12 12:21:33 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(7, 64)
+
+[INFO] Creating node #2
+position=(7, 0) size=(57, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(7, 64)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(7, 26)
+
+[INFO] Creating node #4
+position=(0, 26) size=(7, 38)
+
+[INFO] Splitting horizontally
+BSPNode {position=(7, 0) size=(57, 64)}
+
+[INFO] Creating node #5
+position=(7, 0) size=(57, 35)
+
+[INFO] Creating node #6
+position=(7, 35) size=(57, 29)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(7, 26)}
+
+[INFO] Creating node #7
+position=(0, 0) size=(7, 13)
+
+[INFO] Creating node #8
+position=(0, 13) size=(7, 13)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 26) size=(7, 38)}
+
+[INFO] Creating node #9
+position=(0, 26) size=(7, 38)
+
+[INFO] Creating node #10
+position=(0, 64) size=(7, 0)
+
+[INFO] Splitting vertically
+BSPNode {position=(7, 0) size=(57, 35)}
+
+[INFO] Creating node #11
+position=(7, 0) size=(43, 35)
+
+[INFO] Creating node #12
+position=(50, 0) size=(14, 35)
+
+[INFO] Splitting vertically
+BSPNode {position=(7, 35) size=(57, 29)}
+
+[INFO] Creating node #13
+position=(7, 35) size=(44, 29)
+
+[INFO] Creating node #14
+position=(51, 35) size=(13, 29)
+
+[INFO] Game started at Wed Mar 12 12:21:38 2025
+
+
+[INFO] MainWindow successfully created
+targetSize=(1920, 1080) actualSize=(1920, 1080)
+
+[INFO] Frame limit set to 144
+
+[INFO] Font "mainMenuFont" loaded successfully
+
+[INFO] MainMenuState successfully created
+
+[INFO] Texture "wallTexture" loaded successfully
+
+[INFO] Font "floorTexture" loaded successfully
+
+[INFO] Creating node #0
+position=(0, 0) size=(64, 64)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(64, 64)}
+
+[INFO] Creating node #1
+position=(0, 0) size=(56, 64)
+
+[INFO] Creating node #2
+position=(56, 0) size=(8, 64)
+
+[INFO] Splitting horizontally
+BSPNode {position=(0, 0) size=(56, 64)}
+
+[INFO] Creating node #3
+position=(0, 0) size=(56, 52)
+
+[INFO] Creating node #4
+position=(0, 52) size=(56, 12)
+
+[INFO] Splitting horizontally
+BSPNode {position=(56, 0) size=(8, 64)}
+
+[INFO] Creating node #5
+position=(56, 0) size=(8, 37)
+
+[INFO] Creating node #6
+position=(56, 37) size=(8, 27)
+
+[INFO] Splitting vertically
+BSPNode {position=(0, 0) size=(56, 52)}
+
+[INFO] Creating node #7
+position=(0, 0) size=(44, 52)
+
+[INFO] Creating node #8
+position=(44, 0) size=(12, 52)
+
+[INFO] Splitting horizontally
+BSPNode {position=(56, 0) size=(8, 37)}
+
+[INFO] Creating node #9
+position=(56, 0) size=(8, 23)
+
+[INFO] Creating node #10
+position=(56, 23) size=(8, 14)
+
+[INFO] Splitting horizontally
+BSPNode {position=(56, 37) size=(8, 27)}
+
+[INFO] Creating node #11
+position=(56, 37) size=(8, 16)
+
+[INFO] Creating node #12
+position=(56, 53) size=(8, 11)
+
+[INFO] Level 0 created
+
+[INFO] Player successfully created
+name=PLAYER, location=(32, 32)
+
+[INFO] GameplayState successfully created
+
+[INFO] Shutting down...
+
