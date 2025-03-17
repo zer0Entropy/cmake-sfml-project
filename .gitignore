@@ -4,4 +4,4 @@ resource
 .idea
 .vs
 .vscode
-log.txt
+*.txt
